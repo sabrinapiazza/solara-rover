@@ -1,0 +1,100 @@
+# Autonomous Agricultural Rover
+
+ROS2 Jazzy-based autonomous rover for R'Garden Community Garden at UCR.
+
+## Team
+6-person robotics team, 4-week development sprint
+
+## System Overview
+
+### Hardware
+- **Compute**: Raspberry Pi 5
+- **Motor Control**: Raspberry Pi Pico
+- **Navigation Sensors**: RPLIDAR A1, BNO055 IMU, NEO-M8N GPS
+- **Obstacle Detection**: 4x HC-SR04 Ultrasonic
+- **Environmental Sensors**: BME680, TSL2591, Soil moisture, MLX90640 thermal
+
+### Software Architecture
+- **ROS2 Jazzy**: Navigation, SLAM, sensor fusion
+- **Nav2**: Autonomous path planning
+- **SLAM Toolbox**: Mapping and localization
+- **MQTT**: Environmental data to Lenovo server for Esri mapping
+
+## Repository Structure
+```
+├── rover_description/     # URDF robot model
+├── rover_navigation/      # Nav2 configs, SLAM, mission planning
+├── rover_drivers/         # Sensor drivers (GPS, IMU, LiDAR, motors)
+├── rover_bringup/         # Top-level launch files
+├── pico_firmware/         # Motor control firmware
+├── env_data/              # Environmental data collection (non-ROS)
+├── calibration/           # Sensor and wheel calibration data
+└── tests/                 # Unit and integration tests
+```
+
+## Setup
+
+### Prerequisites
+- ROS2 Jazzy on Ubuntu 24.04
+- Python 3.12+
+
+### Installation
+```bash
+# Clone repository
+cd ~
+git clone git@github.com:your-username/solara-rover.git
+cd solara-rover
+
+#Windows users ???
+mkdir -p ~/ros2_ws/src
+mv ~/solara-rover ~/ros2_ws/src/
+cd ~/ros2_ws
+
+
+# Install ROS2 dependencies
+sudo apt install ros-jazzy-nav2-bringup \
+                 ros-jazzy-slam-toolbox \
+                 ros-jazzy-robot-localization \
+                 ros-jazzy-rplidar-ros
+
+# Install Python dependencies
+pip3 install -r requirements.txt
+
+# Build 
+#Windows users
+cd ~/ros2_ws
+#mac users
+
+colcon build
+
+# Source
+source install/setup.bash
+```
+
+## Usage
+
+### Hardware Testing
+```bash
+# Test individual sensors
+ros2 run rover_drivers gps_driver
+ros2 run rover_drivers imu_driver
+
+# Launch all sensors
+ros2 launch rover_drivers all_sensors.launch.py
+```
+
+### Navigation
+```bash
+# Full system launch
+ros2 launch rover_bringup robot.launch.py
+```
+
+## Development Status
+
+- [ ] Week 1: Driver development
+- [ ] Week 2: Hardware integration
+- [ ] Week 3: SLAM mapping and navigation
+- [ ] Week 4: Full system testing
+
+## License
+MIT

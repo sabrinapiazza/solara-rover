@@ -1,0 +1,31 @@
+
+# ROS2
+build/
+install/
+log/
+*.egg-info/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Calibration data (optional - decide if you want to commit)
+calibration/imu_calibration.json
+
+# Maps (large files - don't commit until final)
+rover_navigation/maps/*.pgm

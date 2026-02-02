@@ -1,0 +1,14 @@
+# Problem: You have 3 sources of position/movement data that contradict each other:
+
+# Wheel encoders: "I moved 50cm forward" (but wheels slipped on soil)
+# IMU: "I'm rotating 10°/sec" (drifts over time)
+# GPS: "I'm at this lat/lon" (±2m accuracy, jumps around)
+
+# Solution: EKF (Extended Kalman Filter) mathematically combines them into ONE accurate estimate.
+# The config tells it:
+
+# Which topics to subscribe to (/odom, /imu/data, /gps/fix)
+# Which data from each sensor to trust (position? velocity? orientation?)
+# How much to weight each sensor (trust IMU for rotation, GPS for long-term position, wheels for short-term movement)
+
+# Output: /odometry/filtered - One clean, fused odometry estimate that Nav2 uses for navigation.

@@ -1,0 +1,4 @@
+# Nav2 configuration (speeds, turning rates, costmap sizes)
+# Planner and controller settings
+# Recovery behavior parameters
+# Tuned for your specific rover dimensions and capabilities
