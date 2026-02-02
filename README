@@ -43,12 +43,21 @@ ROS2 Jazzy-based autonomous rover for R'Garden Community Garden at UCR.
 # Clone repository
 cd ~
 git clone git@github.com:your-username/solara-rover.git
-cd solara-rover
 
-#Windows users ???
-mkdir -p ~/ros2_ws/src
-mv ~/solara-rover ~/ros2_ws/src/
-cd ~/ros2_ws
+#mac users: 
+#run docker
+#cmd+shift+p: reopen in container 
+
+#First Time Dev Container Setup
+After opening in container for the first time:
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your@email.com"
+```
+
+#everyone
+
+cd solara-rover
 
 
 # Install ROS2 dependencies
@@ -62,10 +71,8 @@ pip3 install -r requirements.txt
 
 # Build 
 #Windows users
-cd ~/ros2_ws
-#mac users
-
-colcon build
+make sure you are in the root directory of the repo
+colcon build 
 
 # Source
 source install/setup.bash

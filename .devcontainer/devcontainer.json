@@ -1,0 +1,24 @@
+{
+  "name": "Agricultural Rover - ROS2 Jazzy",
+  "image": "osrf/ros:jazzy-desktop-full",
+  
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-iot.vscode-ros",
+        "ms-vscode.cpptools",
+        "twxs.cmake",
+        "redhat.vscode-yaml"
+      ]
+    }
+  },
+
+  "postCreateCommand": "apt-get update && apt-get install -y python3-pip git && cd ros2_ws && source /opt/ros/jazzy/setup.bash && colcon build --symlink-install",
+
+  "remoteUser": "root"
+}
