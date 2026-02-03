@@ -1,0 +1,28 @@
+name: Environmental Sensors Check
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install sensor libraries
+      run: |
+        pip install adafruit-circuitpython-mlx90640 || true
+        pip install adafruit-circuitpython-bme680 || true
+        pip install adafruit-circuitpython-tsl2591 || true
+        pip install numpy || true
+    
+    - name: Check syntax - Sensor files only
+      run: |
+        python -m py_compile env_data/sensors/thermal.py
+        python -m py_compile env_data/sensors/environment.py
+        python -m py_compile env_data/sensors/light.py
