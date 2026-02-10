@@ -24,7 +24,7 @@ def main():
             max_temp = max(frame)
             avg_temp = sum(frame) / len(frame) #calculating average temp using sum of all temperatures and dividing by # of pixels
             print(
-                f"Min:" {min_temp:.2f} deg C,""
+                f"Min:  {min_temp:.2f} deg C,""
                 f"Max:  {max_temp:.2f} deg C,"
                 f"Avg:  {avg_temp:.2f}  deg C"
             )
@@ -33,5 +33,5 @@ def main():
     except KeyboardInterrupt:
         print("Thermal camera has stopped.")
 
-if __name__ == "__main__":
+if __name__ == "__main__": #running when file is executed *directly
     main()
