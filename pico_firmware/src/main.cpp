@@ -26,3 +26,28 @@
 // Publishes to /odom (ROS2 topic)
 
 
+#include <Servo.h>
+#include "claw_controller.h"
+
+ClawController claw;
+
+void setup() {
+  // Initialize serial for Pi 5 communication
+  Serial.begin(115200);
+  while (!Serial) {
+    delay(100);
+  }
+  Serial.println("CLAW_READY");
+  
+  // Initialize claw hardware
+  claw.init();
+}
+
+void loop() {
+  // Check for commands from Pi 5 over serial
+  if (Serial.available()) {
+    String command = Serial.readStringUntil('\n');
+    command.trim();
+    claw.handle_command(command);
+  }
+}
