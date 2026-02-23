@@ -1,1 +1,11 @@
-.pio
+# PlatformIO
+.pio/
+.vscode/.pio/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
