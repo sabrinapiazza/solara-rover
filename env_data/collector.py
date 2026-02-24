@@ -1,5 +1,5 @@
 # Main coordinator script
-# Subscribes to ROS2 /gps/fix topic (to get GPS coordinates)
+# NOT STARTED - Subscribes to ROS2 /gps/fix topic (to get GPS coordinates)
 # DONE - Reads all environmental sensors
 # PARTIALLY DONE - Combines sensor data + GPS location into JSON
 # DONE - Publishes to MQTT for Lenovo server
@@ -31,6 +31,7 @@ def on_publish(client, userdata, mid):
 def on_disconnect(client, userdata, rc):
     if rc != 0:
         print(f"[MQTT] Unexpected disconnect (rc={rc}). Will auto-reconnect.")
+
 
 # MAIN 
 def main():

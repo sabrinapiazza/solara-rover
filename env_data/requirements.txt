@@ -4,6 +4,7 @@ adafruit-circuitpython-tsl2591
 numpy
 lgpio
 adafruit-blinka
+paho.mqtt
+i2c-tools
 
 #uncomment above to test sensors 
-# add pho-mqtt later
