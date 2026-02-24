@@ -5,8 +5,5 @@ numpy
 lgpio
 adafruit-blinka
 
-
-adafruit-blinka
-
 #uncomment above to test sensors 
 # add pho-mqtt later
