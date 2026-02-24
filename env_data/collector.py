@@ -5,11 +5,13 @@
 # Publishes to MQTT for Lenovo server
 # Runs on timer (e.g., every 5 seconds)
 
+# NOTICE: WORKING INSIDE PAHO-MQTT VIRTUAL ENV, NOT REGULAR VENV
+import paho.mqtt.client as mqtt
+import json
 
-# definitely do by wed 2/25:
 # READ FROM EACH ENV SENSOR
-
-
+# pull from sensors/environment.py, sensors/light.py, sensors/thermal.py - its own topics 
+# environment.py and light.py giving data in a dictionary 
 
 # COMBINE SENSOR/ML-SPECIFIC DATA INTO JSON 
 

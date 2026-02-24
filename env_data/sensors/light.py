@@ -20,22 +20,20 @@ sensor.gain = adafruit_tsl2591.GAIN_MED
 sensor.integration_time = adafruit_tsl2591.INTEGRATIONTIME_200MS
 #100MS-600MS
 
+lux_data = {}
+
 # Read the total lux, IR, and visible light levels and print it every second.
 while True:
     # Read and calculate the light level in lux.
-    lux = sensor.lux
-    print(f"Total light: {lux}lux")
+    lux_data["Total light"] = sensor.lux
     # You can also read the raw infrared and visible light levels.
     # These are unsigned, the higher the number the more light of that type.
     # There are no units like lux.
     # Infrared levels range from 0-65535 (16-bit)
-    infrared = sensor.infrared
-    print(f"Infrared light: {infrared}")
+    lux_data["Infrared light"] = sensor.infrared
     # Visible-only levels range from 0-2147483647 (32-bit)
-    visible = sensor.visible
-    print(f"Visible light: {visible}")
+    lux_data["Visible light"] = sensor.visible
     # Full spectrum (visible + IR) also range from 0-2147483647 (32-bit)
-    full_spectrum = sensor.full_spectrum
-    print(f"Full spectrum (IR + visible) light: {full_spectrum}")
+    lux_data["Full spectrum (IR + visible) light"] = sensor.full_spectrum
     #1 second delay
     time.sleep(5)
