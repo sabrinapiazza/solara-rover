@@ -6,32 +6,36 @@ import time
 import board
 import busio
 import adafruit_mlx90640
-print ("Thermal sensor libraries not installed.")
-print ("This is expected if not running inside the container!")
 
-def main():
-    i2c = busio.I2C(board.SCL, board.SDA, frequency= 8e+5) #creating an i2c communication channel
+def get_data():
+    # Single read of MLX90640 frame. Returns min/max/avg stats as a dict for collector.py.
+    i2c = busio.I2C(board.SCL, board.SDA, frequency=8e5)
     mlx = adafruit_mlx90640.MLX90640(i2c)
     mlx.refresh_rate = adafruit_mlx90640.RefreshRate.REFRESH_8_Hz
-    frame = [0] * 768 #768 are the pixels from the camera
-    print("Thermal camera initallized. Reading data...")
 
+    frame = [0] * 768  # 32x24 = 768 pixels
+    mlx.getFrame(frame)
+
+    return {
+        "min_c": round(min(frame), 2),              # coldest pixel in degrees C
+        "max_c": round(max(frame), 2),              # hottest pixel in degrees C
+        "avg_c": round(sum(frame) / len(frame), 2), # average across all pixels
+    }
+
+def main():
+    # Standalone loop for testing thermal.py directly.
+    print("Thermal camera initialized. Reading data...")
     try:
         while True:
-            mlx.getFrame(frame)
-
-            min_temp = min(frame)
-            max_temp = max(frame)
-            avg_temp = sum(frame) / len(frame) #calculating average temp using sum of all temperatures and dividing by # of pixels
+            data = get_data()
             print(
-                f"Min:  {min_temp:.2f} deg C,"
-                f"Max:  {max_temp:.2f} deg C,"
-                f"Avg:  {avg_temp:.2f}  deg C"
+                f"Min: {data['min_c']} °C, "
+                f"Max: {data['max_c']} °C, "
+                f"Avg: {data['avg_c']} °C"
             )
             time.sleep(1)
-            
     except KeyboardInterrupt:
-        print("Thermal camera has stopped.")
+        print("Thermal camera stopped.")
 
-if __name__ == "__main__": #running when file is executed *directly
+if __name__ == "__main__":
     main()

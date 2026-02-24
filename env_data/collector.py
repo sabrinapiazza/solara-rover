@@ -1,28 +1,75 @@
 # Main coordinator script
 # Subscribes to ROS2 /gps/fix topic (to get GPS coordinates)
-# Reads all environmental sensors
-# Combines sensor data + GPS location into JSON
-# Publishes to MQTT for Lenovo server
-# Runs on timer (e.g., every 5 seconds)
+# DONE - Reads all environmental sensors
+# PARTIALLY DONE - Combines sensor data + GPS location into JSON
+# DONE - Publishes to MQTT for Lenovo server
+# DONE - Runs on timer (e.g., every 5 seconds)
 
 # NOTICE: WORKING INSIDE PAHO-MQTT VIRTUAL ENV, NOT REGULAR VENV
+
 import paho.mqtt.client as mqtt
-import json
+import json, time, yaml
+from sensors import environment, light, thermal
 
-# READ FROM EACH ENV SENSOR
-# pull from sensors/environment.py, sensors/light.py, sensors/thermal.py - its own topics 
-# environment.py and light.py giving data in a dictionary 
+# LOAD CONFIG 
+with open("config.yaml", "r") as f:
+    config = yaml.safe_load(f)
 
-# COMBINE SENSOR/ML-SPECIFIC DATA INTO JSON 
-
-
-
-# MQTT PUBLISHER CLIENT ESTABLISHMENT AND SEND 
-# 1. establish paho eclipse mqtt library
-# 2a. send a CONNECT message to the mos1 broker, which responds with a CONNACK message and a status code
-# 2b. ClientId, CleanSession flag, KeepAlive (everything else optional)
-# 3a. upon connection, send a PUBLISH message with JSON payload
-# 3b. PacketId, Topic Name, Quality of Service (QoS), Retain Flag, Payload, DUP Flag
-# 3c. Once the broker receives the PUBLISH message, it is the responsibility of the broker to deliver the message to all subscribers. 
+broker    = config["broker"]
+topics    = config["topics"]
+INTERVAL  = config["collector"]["poll_interval"]
+QoS       = 1
 
 
+# MQTT CALLBACKS 
+def on_connect(client, userdata, flags, rc):
+    print(f"[MQTT] CONNACK rc={rc}")
+
+def on_publish(client, userdata, mid):
+    print(f"[MQTT] PUBACK received for PacketId={mid}")
+
+def on_disconnect(client, userdata, rc):
+    if rc != 0:
+        print(f"[MQTT] Unexpected disconnect (rc={rc}). Will auto-reconnect.")
+
+# MAIN 
+def main():
+    client = mqtt.Client(client_id=broker["client_id"], clean_session=broker["clean_session"])
+    client.on_connect    = on_connect
+    client.on_publish    = on_publish
+    client.on_disconnect = on_disconnect
+
+    client.will_set(topics["status"], json.dumps({"status": "offline"}), qos=QoS, retain=True)
+    client.connect(host=broker["host"], port=broker["port"], keepalive=broker["keepalive"])
+    client.loop_start()
+    client.publish(topics["status"], json.dumps({"status": "online"}), qos=QoS, retain=True)
+
+    print(f"[COLLECTOR] Publishing every {INTERVAL}s. Ctrl-C to stop.")
+    try:
+        while True:
+            timestamp    = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+            env_data     = environment.get_data()
+            light_data   = light.get_data()
+            thermal_data = thermal.get_data()
+
+            client.publish(topics["environment"], json.dumps({"timestamp": timestamp, **env_data}),     qos=QoS)
+            client.publish(topics["light"],       json.dumps({"timestamp": timestamp, **light_data}),   qos=QoS)
+            client.publish(topics["thermal"],     json.dumps({"timestamp": timestamp, **thermal_data}), qos=QoS)
+            client.publish(topics["all"],         json.dumps({
+                "timestamp":   timestamp,
+                "environment": env_data,
+                "light":       light_data,
+                "thermal":     thermal_data,
+            }), qos=QoS)
+
+            print(f"[COLLECTOR] Published @ {timestamp}")
+            time.sleep(INTERVAL)
+
+    except KeyboardInterrupt:
+        print("[COLLECTOR] Shutting down.")
+    finally:
+        client.loop_stop()
+        client.disconnect()
+
+if __name__ == "__main__":
+    main()

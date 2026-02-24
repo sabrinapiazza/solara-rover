@@ -1,4 +1,35 @@
-# MQTT broker IP address (Lenovo server)
+# DONE - MQTT broker IP address (Lenovo server)
 # Sensor I2C addresses and pins
-# Data collection intervals
-# Topic names for publishing
+# DONE - Data collection intervals
+# DONE - Topic names for publishing
+
+broker:
+  host: "mos1"
+  ip: "0.0.0.0"
+  port: 1883
+  client_id: "collector-pi-001"
+  clean_session: true
+  keepalive: 60
+
+sensors:
+  environment:
+    i2c_address: 0x76
+    sea_level_pressure: 1020.7  # hPa - adjust to local Riverside pressure
+    scl_pin: "GP1"
+    sda_pin: "GP0"
+  light:
+    gain: "GAIN_MED"            # GAIN_LOW, GAIN_MED, GAIN_HIGH, GAIN_MAX
+    integration_time: "200MS"   # 100MS - 600MS
+  thermal:
+    frequency: 800000           # I2C frequency in Hz (8e5)
+    refresh_rate: "REFRESH_8_Hz"
+
+topics:
+  environment: "sensors/environment"
+  light:       "sensors/light"
+  thermal:     "sensors/thermal"
+  all:         "sensors/all"
+  status:      "sensors/status"
+
+collector:
+  poll_interval: 5  # seconds between each sensor read + publish
