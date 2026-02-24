@@ -12,16 +12,25 @@ import busio
 
 def get_data():
     # Single read of all BME680 sensors. Returns a dict for collector.py.
-    i2c = busio.I2C(board.SCL, board.SDA)
-    bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c, 0x76)
-    bme680.sea_level_pressure = 1020.7  # hPa - adjust to local sea-level pressure
+    # i2c = busio.I2C(board.SCL, board.SDA)
+    # bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c, 0x76)
+    # bme680.sea_level_pressure = 1020.7  # hPa - adjust to local sea-level pressure
 
+    # return {
+    #     "temperature_c": round(bme680.temperature, 2),  # degrees Celsius
+    #     "humidity_rh":   round(bme680.relative_humidity, 2),  # RH %
+    #     "pressure_hpa":  round(bme680.pressure, 2),  # hectoPascals
+    #     "gas_ohms":      bme680.gas,  # gas resistance in ohms
+    #     "altitude_m":    round(bme680.altitude, 2),  # meters
+    # }
+    
+        # MOCK - replace with real sensor read when running on hardware
     return {
-        "temperature_c": round(bme680.temperature, 2),  # degrees Celsius
-        "humidity_rh":   round(bme680.relative_humidity, 2),  # RH %
-        "pressure_hpa":  round(bme680.pressure, 2),  # hectoPascals
-        "gas_ohms":      bme680.gas,  # gas resistance in ohms
-        "altitude_m":    round(bme680.altitude, 2),  # meters
+        "temperature_c": 28.73,
+        "humidity_rh":   52.14,
+        "pressure_hpa":  1008.92,
+        "gas_ohms":      47832,
+        "altitude_m":    302.56,
     }
 
 def main():

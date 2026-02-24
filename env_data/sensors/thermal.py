@@ -9,17 +9,23 @@ import adafruit_mlx90640
 
 def get_data():
     # Single read of MLX90640 frame. Returns min/max/avg stats as a dict for collector.py.
-    i2c = busio.I2C(board.SCL, board.SDA, frequency=8e5)
-    mlx = adafruit_mlx90640.MLX90640(i2c)
-    mlx.refresh_rate = adafruit_mlx90640.RefreshRate.REFRESH_8_Hz
+    # i2c = busio.I2C(board.SCL, board.SDA, frequency=8e5)
+    # mlx = adafruit_mlx90640.MLX90640(i2c)
+    # mlx.refresh_rate = adafruit_mlx90640.RefreshRate.REFRESH_8_Hz
 
-    frame = [0] * 768  # 32x24 = 768 pixels
-    mlx.getFrame(frame)
+    # frame = [0] * 768  # 32x24 = 768 pixels
+    # mlx.getFrame(frame)
 
+    # return {
+    #     "min_c": round(min(frame), 2),              # coldest pixel in degrees C
+    #     "max_c": round(max(frame), 2),              # hottest pixel in degrees C
+    #     "avg_c": round(sum(frame) / len(frame), 2), # average across all pixels
+    # }
+        # MOCK - replace with real sensor read when running on hardware
     return {
-        "min_c": round(min(frame), 2),              # coldest pixel in degrees C
-        "max_c": round(max(frame), 2),              # hottest pixel in degrees C
-        "avg_c": round(sum(frame) / len(frame), 2), # average across all pixels
+        "min_c": 19.84,
+        "max_c": 41.27,
+        "avg_c": 29.63,
     }
 
 def main():

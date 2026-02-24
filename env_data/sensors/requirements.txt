@@ -5,6 +5,6 @@ numpy
 lgpio
 adafruit-blinka
 paho.mqtt
-i2c-tools
+# i2c-tools
 
 #uncomment above to test sensors 

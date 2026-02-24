@@ -9,17 +9,24 @@ import busio
 
 def get_data():
     # Single read of all TSL2591 sensors. Returns a dict for collector.py.
-    i2c = busio.I2C(board.SCL, board.SDA)
-    sensor = adafruit_tsl2591.TSL2591(i2c)
+    # i2c = busio.I2C(board.SCL, board.SDA)
+    # sensor = adafruit_tsl2591.TSL2591(i2c)
 
-    sensor.gain = adafruit_tsl2591.GAIN_MED          # 25x gain (default)
-    sensor.integration_time = adafruit_tsl2591.INTEGRATIONTIME_200MS
+    # sensor.gain = adafruit_tsl2591.GAIN_MED          # 25x gain (default)
+    # sensor.integration_time = adafruit_tsl2591.INTEGRATIONTIME_200MS
 
+    # return {
+    #     "lux":           round(sensor.lux, 4),   # total light in lux
+    #     "infrared":      sensor.infrared,         # IR only,  0-65535 (16-bit)
+    #     "visible":       sensor.visible,          # visible only, 0-2147483647 (32-bit)
+    #     "full_spectrum": sensor.full_spectrum,    # visible + IR, 0-2147483647 (32-bit)
+    # }
+        # MOCK - replace with real sensor read when running on hardware
     return {
-        "lux":           round(sensor.lux, 4),   # total light in lux
-        "infrared":      sensor.infrared,         # IR only,  0-65535 (16-bit)
-        "visible":       sensor.visible,          # visible only, 0-2147483647 (32-bit)
-        "full_spectrum": sensor.full_spectrum,    # visible + IR, 0-2147483647 (32-bit)
+        "lux":           784.32,
+        "infrared":      5210,
+        "visible":       18432,
+        "full_spectrum": 23641,
     }
 
 def main():

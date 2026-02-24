@@ -15,8 +15,8 @@ sensors:
   environment:
     i2c_address: 0x76
     sea_level_pressure: 1020.7  # hPa - adjust to local Riverside pressure
-    scl_pin: "GP1"
-    sda_pin: "GP0"
+    scl_pin: "SCL"   
+    sda_pin: "SDA"   
   light:
     gain: "GAIN_MED"            # GAIN_LOW, GAIN_MED, GAIN_HIGH, GAIN_MAX
     integration_time: "200MS"   # 100MS - 600MS
