@@ -12,7 +12,7 @@ print ("This is expected if not running inside the container!")
 def main():
     i2c = busio.I2C(board.SCL, board.SDA, frequency= 8e+5) #creating an i2c communication channel
     mlx = adafruit_mlx90640.MLX90640(i2c)
-    mlx.refresh_rate = adafruit_mlx90640.RefreshRate.REFRESH_8_Hz
+    mlx.refresh_rate = adafruit_mlx90640.RefreshRate.REFRESH_8_HZ
     frame = [0] * 768 #768 are the pixels from the camera
     print("Thermal camera initallized. Reading data...")
 
