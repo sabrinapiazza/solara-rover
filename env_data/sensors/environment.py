@@ -16,22 +16,22 @@ def main():
     # The board.I2C() automatically finds the correct pins for your specific board (like a Raspberry Pi Pico, ESP32, or Arduino).
     # Use the raw pin IDs for a Raspberry Pi
     # GPIO 2 is SDA, GPIO 3 is SCL
-    try:
-        i2c = busio.I2C(microcontroller.pin.GPIO3, microcontroller.pin.GPIO2)
-        print("Manual I2C initialization successful!")
-    except Exception as e:
-        print(f"Hardware Access Error: {e}")
-        return
+    # try:
+    #     i2c = busio.I2C(microcontroller.pin.GPIO3, microcontroller.pin.GPIO2)
+    #     print("Manual I2C initialization successful!")
+    # except Exception as e:
+    #     print(f"Hardware Access Error: {e}")
+    #     return
 
-    # Now continue with your BME680 setup
-    try:
-        bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c)
-    except Exception as e:
-        print(f"Could not find BME680: {e}")
-    # i2c = board.I2C()
+    # # Now continue with your BME680 setup
+    # try:
+    #     bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c)
+    # except Exception as e:
+    #     print(f"Could not find BME680: {e}")
+    i2c = board.I2C()
 
-    # # To initialise using the default address:
-    # bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c)
+    # To initialise using the default address:
+    bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c)
 
     # change this to match the location's pressure (hPa) at sea level
     # This standard pressure value lets the sensor estimate altitude. 
