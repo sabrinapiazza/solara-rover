@@ -93,14 +93,20 @@ class GPSDriver(Node):
 
         msg.position_covariance_type = NavSatFix.COVARIANCE_TYPE_UNKNOWN
 
+        self.get_logger().info(f"Lat: {lat}, Lon: {lon}, Alt: {altitude}")
+
         self.fix_pub.publish(msg)
 
     def convert_to_degrees(self, value, hemisphere):
         if not value:
             return 0.0
 
-        degrees = float(value[:2])
-        minutes = float(value[2:])
+        if len(value) > 7:
+            degrees = float(value[:3])
+            minutes = float(value[3:])
+        else:
+            degrees = float(value[:2])
+            minutes = float(value[2:])
         decimal = degrees + minutes / 60.0
 
         if hemisphere in ["S", "W"]:
