@@ -4,7 +4,7 @@
 # DONE - Topic names for publishing
 
 broker:
-  host: "mos1"
+  host: "localhost"
   ip: "0.0.0.0"
   port: 1883
   client_id: "collector-pi-001"
@@ -28,8 +28,13 @@ topics:
   environment: "sensors/environment"
   light:       "sensors/light"
   thermal:     "sensors/thermal"
+  gps:         "sensors/gps"        
   all:         "sensors/all"
   status:      "sensors/status"
 
+subscriber:
+  qos: 1
+  data_dir: "../mosquitto/data"
+  
 collector:
   poll_interval: 5  # seconds between each sensor read + publish
