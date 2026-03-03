@@ -7,8 +7,18 @@
 
 import adafruit_bme680
 import time
-import board
-# import busio
+import board    #breakout-specific pin identities
+
+# sudo raspi-config
+# sudo apt install i2c-tools
+# reboot after enabling I2C
+# pip3 install -r requirements.txt
+# pip3 install --upgrade adafruit_blinka
+# install with pip3 but run with python rather than python3
+
+# python3 -c "import board"
+# ls /dev/i2c*      (should see /dev/i2c-1)
+# i2cdetect -y 1
 
 def main():
     # Create sensor object, communicating over the board's default I2C bus
@@ -17,17 +27,12 @@ def main():
     i2c = board.I2C()
 
     # To initialise using the default address:
-    bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c)
+    bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c, 0x76, True)
 
     # change this to match the location's pressure (hPa) at sea level
     # This standard pressure value lets the sensor estimate altitude. 
     # If you know your local sea-level pressure (from weather reports), you can adjust this for more accurate altitude readings.
     bme680.sea_level_pressure = 1020.7   #check for riverside since this r'garden
-
-    # You will usually have to add an offset to account for the temperature of
-    # the sensor. This is usually around 5 degrees but varies by use. Use a
-    # separate temperature sensor to calibrate this one.
-    temperature_offset = -5
 
     # Every 2 seconds, it reads all five values from the sensor 
     # and prints them formatted to specific decimal places (like %0.1f for one decimal place).

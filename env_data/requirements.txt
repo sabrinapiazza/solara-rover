@@ -3,7 +3,9 @@ adafruit-circuitpython-bme680
 adafruit-circuitpython-tsl2591
 numpy
 
-adafruit-blinka
+# adafruit-blinka
+sudo raspi-config)
+Adafruit-Blinka
 lgpio
 
 #uncomment above to test sensors 
