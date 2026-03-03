@@ -32,3 +32,4 @@ rover_navigation/maps/*.pgm
 
 # virtual environment
 .venv/
+mqtt-publisher/
