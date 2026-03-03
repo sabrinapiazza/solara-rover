@@ -8,7 +8,7 @@
 import adafruit_bme680
 import time
 import board
-# import busio
+import busio
 
 def main():
     # Create sensor object, communicating over the board's default I2C bus
