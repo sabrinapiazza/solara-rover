@@ -31,6 +31,9 @@ CALIBRATION_FILE = os.path.join(os.path.dirname(__file__), '../../../../calibrat
 # Check bus exists: ls /dev/i2c* --> /dev/i2c-1
 # i2cdetect -y 1 --> 0x29 or 0x28
 
+# CALIBRATION_SAVE_INTERVAL = 300  # Save offsets every 5 minutes during operation
+CALIBRATION_SAVE_INTERVAL = 3   # 3 secs for testing
+
 class IMUDriver(Node):
     def __init__(self):
         super().__init__('imu_driver')
@@ -53,6 +56,10 @@ class IMUDriver(Node):
         # Tracks whether we've saved calibration this session.
         # Prevents re-writing the file every loop once all values hit 3.
         self._calibrated = False
+
+        # Timestamp for periodic calibration saves (Option 2)
+        self._last_save = time.time()
+
         self._load_calibration()
 
         # Publish IMU data at 0.02s interval
@@ -71,7 +78,7 @@ class IMUDriver(Node):
         """
         if not os.path.exists(CALIBRATION_FILE):
             # First run - sensor will self-calibrate as the rover moves around.
-            # Once all 4 values reach 3, offsets are auto-saved for future boots.
+            # Offsets are saved periodically and on shutdown for future boots.
             self.get_logger().warn('No calibration file found - sensor will self-calibrate')
             return
 
@@ -99,7 +106,9 @@ class IMUDriver(Node):
 
     def _save_calibration(self):
         """
-        Save current calibration offsets to JSON. Called automatically once fully calibrated.
+        Save current calibration offsets to JSON.
+        Called when sys+accel reach 3, every 5 minutes during operation,
+        and on node shutdown - so offsets gradually improve each session.
         """
         try:
             os.makedirs(os.path.dirname(CALIBRATION_FILE), exist_ok=True)
@@ -112,9 +121,18 @@ class IMUDriver(Node):
                 json.dump(offsets, f)
             self.get_logger().info(f'Calibration saved to {CALIBRATION_FILE}')
             self._calibrated = True  # stop re-saving on subsequent loops
+            self._last_save = time.time()  # reset periodic save timer
         except Exception as e:
             self.get_logger().error(f'Failed to save calibration: {e}')
 
+    def destroy_node(self):
+        """
+        Save calibration offsets on clean shutdown (Option 3).
+        Ensures the best available offsets are always preserved on exit.
+        """
+        self.get_logger().info('Shutting down - saving calibration offsets')
+        self._save_calibration()
+        super().destroy_node()
 
     # PUBLISH 
     def _publish(self):
@@ -123,7 +141,7 @@ class IMUDriver(Node):
         """
         try:
             quat  = self.sensor.quaternion      # orientation as (w, x, y, z)
-            gyro  = self.sensor.gyro       # angular velocity in rad/s
+            gyro  = self.sensor.gyro            # angular velocity in rad/s
             accel = self.sensor.acceleration    # linear acceleration in m/s²
             cal   = self.sensor.calibration_status  # tuple: (sys, gyro, accel, mag) each 0-3
         except Exception as e:
@@ -136,9 +154,16 @@ class IMUDriver(Node):
         cal_msg.data = f'sys:{cal[0]} gyro:{cal[1]} accel:{cal[2]} mag:{cal[3]}'
         self.cal_pub.publish(cal_msg)
 
-        # Once all four calibration values reach 3 (fully calibrated),
-        # save offsets so they survive the next power cycle
-        if not self._calibrated and all(c == 3 for c in cal):
+        # Option 1: Save when sys and accel hit 3 (good enough for a rover).
+        # Magnetometer can take a long time to reach 3 but rover is still usable.
+        if not self._calibrated and cal[0] == 3 and cal[2] == 3:
+            self.get_logger().info('sys+accel fully calibrated - saving offsets')
+            self._save_calibration()
+
+        # Option 2: Save periodically every 5 minutes regardless of calibration
+        # level, so offsets gradually improve over time across sessions.
+        if time.time() - self._last_save > CALIBRATION_SAVE_INTERVAL:
+            self.get_logger().info('Periodic calibration save')
             self._save_calibration()
 
         # Sensor returns None on individual fields during warmup before
