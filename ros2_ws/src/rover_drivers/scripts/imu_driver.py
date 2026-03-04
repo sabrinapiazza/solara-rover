@@ -44,7 +44,7 @@ class IMUDriver(Node):
         # Fatal error if sensor not found - no point running without hardware.
         try:
             i2c = board.I2C()
-            self.sensor = adafruit_bno055.Adafruit_BNO055_I2C(i2c, 0x28, True)
+            self.sensor = adafruit_bno055.BNO055_I2C(i2c)
             self.get_logger().info('BNO055 connected via I2C')
         except Exception as e:
             self.get_logger().fatal(f'Failed to connect to BNO055: {e}')
