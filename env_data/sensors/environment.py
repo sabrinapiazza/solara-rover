@@ -8,12 +8,12 @@
 import adafruit_bme680
 import time
 import board
-
+import busio
 
 # Create sensor object, communicating over the board's default I2C bus
 # This connects the BME680 to your microcontroller using I2C (Inter-Integrated Circuit), a common 2-wire communication protocol. 
 # The board.I2C() automatically finds the correct pins for your specific board (like a Raspberry Pi Pico, ESP32, or Arduino).
-i2c = board.I2C() # uses board.SCL and board.SDA
+i2c = busio.I2C(board.SCL, board.SDA)
 
 # To initialise using the default address:
 bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c, 0x76, True)
