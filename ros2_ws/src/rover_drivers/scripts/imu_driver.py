@@ -31,8 +31,8 @@ CALIBRATION_FILE = os.path.join(os.path.dirname(__file__), '../../../../calibrat
 # Check bus exists: ls /dev/i2c* --> /dev/i2c-1
 # i2cdetect -y 1 --> 0x29 or 0x28
 
-# CALIBRATION_SAVE_INTERVAL = 300  # Save offsets every 5 minutes during operation
-CALIBRATION_SAVE_INTERVAL = 3   # 3 secs for testing
+CALIBRATION_SAVE_INTERVAL = 300  # Save offsets every 5 minutes during operation
+# CALIBRATION_SAVE_INTERVAL = 3   # 3 secs for testing
 
 class IMUDriver(Node):
     def __init__(self):
