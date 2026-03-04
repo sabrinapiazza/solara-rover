@@ -46,7 +46,8 @@ def main():
         bme_input["Pressure"] = bme680.pressure  #The barometric pressure in hectoPascals
         bme_input["Altitude"] = bme680.altitude  #The altitude based on current pressure vs the sea level pressure (sea_level_pressure) - which you must enter ahead of time)
         
+        print(bme_input)
         time.sleep(5)
-        
+    
 if __name__ == "__main__":
     main()
