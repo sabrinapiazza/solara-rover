@@ -4,7 +4,7 @@ adafruit-circuitpython-tsl2591
 adafruit-circuitpython-bno055
 
 numpy
-adafruit-blinka
+Adafruit-Blinka
 
 #uncomment above to test sensors 
 # add pho-mqtt later
