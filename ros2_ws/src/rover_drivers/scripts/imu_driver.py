@@ -123,7 +123,7 @@ class IMUDriver(Node):
         """
         try:
             quat  = self.sensor.quaternion      # orientation as (w, x, y, z)
-            gyro  = self.sensor.gyroscope       # angular velocity in rad/s
+            gyro  = self.sensor.gyro       # angular velocity in rad/s
             accel = self.sensor.acceleration    # linear acceleration in m/s²
             cal   = self.sensor.calibration_status  # tuple: (sys, gyro, accel, mag) each 0-3
         except Exception as e:
