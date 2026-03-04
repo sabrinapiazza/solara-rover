@@ -22,6 +22,14 @@ import os
 # without this, the sensor loses calibration every power cycle.
 CALIBRATION_FILE = os.path.join(os.path.dirname(__file__), '../../../../calibration/bno055_offsets.json')
 
+# COMMANDS:
+# sudo raspi-config
+# Interface Options → I2C → Enable
+# sudo reboot
+# sudo apt update
+# sudo apt install -y i2c-tools
+# Check bus exists: ls /dev/i2c* --> /dev/i2c-1
+# i2cdetect -y 1 --> 0x29 or 0x28
 
 class IMUDriver(Node):
     def __init__(self):
@@ -36,7 +44,7 @@ class IMUDriver(Node):
         # Fatal error if sensor not found - no point running without hardware.
         try:
             i2c = board.I2C()
-            self.sensor = adafruit_bno055.Adafruit_BNO055_I2C(i2c)
+            self.sensor = adafruit_bno055.Adafruit_BNO055_I2C(i2c, 0x28, True)
             self.get_logger().info('BNO055 connected via I2C')
         except Exception as e:
             self.get_logger().fatal(f'Failed to connect to BNO055: {e}')
