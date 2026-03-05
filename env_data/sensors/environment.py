@@ -30,7 +30,7 @@ def main():
     i2c = busio.I2C(board.SCL, board.SDA)
 
     # To initialise using the default address:
-    bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c)
+    bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c, 0x77)
 
     # change this to match the location's pressure (hPa) at sea level
     bme680.sea_level_pressure = 1020.7   #check for riverside since this r'garden
