@@ -23,19 +23,15 @@ import busio
 
 def main():
     # Create sensor object, communicating over the board's default I2C bus
-    # This connects the BME680 to your microcontroller using I2C (Inter-Integrated Circuit), a common 2-wire communication protocol. 
-    # The board.I2C() automatically finds the correct pins for your specific board (like a Raspberry Pi Pico, ESP32, or Arduino).
     print(board.__file__)
     print(dir(board))
     
     i2c = board.I2C()
 
     # To initialise using the default address:
-    bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c, 0x76, True)
+    bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c, 0x77, True)
 
     # change this to match the location's pressure (hPa) at sea level
-    # This standard pressure value lets the sensor estimate altitude. 
-    # If you know your local sea-level pressure (from weather reports), you can adjust this for more accurate altitude readings.
     bme680.sea_level_pressure = 1020.7   #check for riverside since this r'garden
 
     # Every 2 seconds, it reads all five values from the sensor 
