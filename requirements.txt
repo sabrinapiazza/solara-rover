@@ -1,0 +1,12 @@
+adafruit-circuitpython-mlx90640
+adafruit-circuitpython-bme680
+adafruit-circuitpython-tsl2591
+adafruit-circuitpython-bno055
+
+numpy
+Adafruit-Blinka
+pyyaml
+rclpy
+
+#uncomment above to test sensors 
+# add pho-mqtt later

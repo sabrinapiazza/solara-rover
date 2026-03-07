@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 import os
 from glob import glob
 
@@ -24,9 +24,9 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'gps_driver = rover_drivers.gps_driver:main',
-            'imu_driver = rover_drivers.imu_driver:main',
-            'motor_bridge = rover_drivers.motor_bridge:main',
+            'gps_driver = rover_drivers.scripts.gps_driver:main',
+            'imu_driver = rover_drivers.scripts.imu_driver:main'
+            'motor_bridge = rover_drivers.scripts.motor_bridge:main',
         ],
     },
 )
