@@ -14,6 +14,8 @@ setup(
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name, 'launch'), 
             glob('launch/*.py')),
+        (os.path.join('share', package_name, 'config'), 
+            glob('config/*.yaml')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -25,8 +27,8 @@ setup(
     entry_points={
         'console_scripts': [
             'gps_driver = rover_drivers.scripts.gps_driver:main',
-            'imu_driver = rover_drivers.scripts.imu_driver:main'
-            'motor_bridge = rover_drivers.scripts.motor_bridge:main',
+            'imu_driver = rover_drivers.scripts.imu_driver:main',
+            # 'motor_bridge = rover_drivers.scripts.motor_bridge:main',
         ],
     },
 )
