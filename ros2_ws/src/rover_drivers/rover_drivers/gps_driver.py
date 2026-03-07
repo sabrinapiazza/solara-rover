@@ -20,7 +20,7 @@ class GPSDriver(Node):
         super().__init__('gps_driver')
 
         # Parameters
-        self.declare_parameter("port", "/dev/ttyUSB0")
+        self.declare_parameter("port", "/dev/ttyAMA0")
         self.declare_parameter("baud", 9600)
         self.declare_parameter("frame_id", "gps_link")
 
