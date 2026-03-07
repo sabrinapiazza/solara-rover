@@ -5,7 +5,8 @@
 # https://docs.circuitpython.org/projects/bme680/en/latest/api.html#implementation-notes
 # https://docs.circuitpython.org/projects/bme680/en/latest/
 
-import adafruit_bme680
+# import adafruit_bme680
+import adafruit_bme280.basic as adafruit_bme280
 import time
 import board    #breakout-specific pin identities
 import busio
@@ -30,10 +31,22 @@ def main():
     i2c = busio.I2C(board.SCL, board.SDA)
 
     # To initialise using the default address:
-    bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c, 118)
+    # bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c)
+    bme280 = adafruit_bme280.Adafruit_BME280_I2C(i2c, 0x76)
 
     # change this to match the location's pressure (hPa) at sea level
-    bme680.sea_level_pressure = 1020.7   #check for riverside since this r'garden
+    # This standard pressure value lets the sensor estimate altitude. 
+    # If you know your local sea-level pressure (from weather reports), you can adjust this for more accurate altitude readings.
+    # bme680.sea_level_pressure = 1020.7   #check for riverside since this r'garden
+
+    bme280.sea_level_pressure = 1020.7
+
+    
+
+    # You will usually have to add an offset to account for the temperature of
+    # the sensor. This is usually around 5 degrees but varies by use. Use a
+    # separate temperature sensor to calibrate this one.
+    temperature_offset = -5
 
     # Every 2 seconds, it reads all five values from the sensor 
     # and prints them formatted to specific decimal places (like %0.1f for one decimal place).
