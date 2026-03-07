@@ -2,7 +2,7 @@ from setuptools import setup
 import os
 from glob import glob
 
-package_name = 'rover_drivers'
+package_name = 'rover_navigation'
 
 setup(
     name=package_name,
@@ -21,16 +21,7 @@ setup(
     zip_safe=True,
     maintainer='SWE Team Tech',
     maintainer_email='swe.ucr@gmail.com',
-    description='Hardware drivers for solara sensors',
+    description='Navigation packages for agricultural rover',
     license='MIT',
     tests_require=['pytest'],
-    entry_points={
-        'console_scripts': [
-            'gps_driver = rover_drivers.gps_driver:main',
-            'imu_driver = rover_drivers.imu_driver:main',
-            'motor_bridge = rover_drivers.motor_bridge:main',
-            'lidar_obstacle_node = rover_drivers.lidar_obstacle_node:main', #new code
-            'fake_scan_pub = rover_drivers.fake_scan_pub:main',
-        ],
-    },
 )
