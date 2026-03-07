@@ -54,11 +54,11 @@ def main():
     bme_input = {}
 
     while True:
-        bme_input["Temperature"] = bme680.temperature  #The compensated temperature in degrees Celsius
-        bme_input["Gas"] = bme680.gas  #The gas resistance in ohms
-        bme_input["Humidity"] = bme680.relative_humidity  #The relative humidity in RH %
-        bme_input["Pressure"] = bme680.pressure  #The barometric pressure in hectoPascals
-        bme_input["Altitude"] = bme680.altitude  #The altitude based on current pressure vs the sea level pressure (sea_level_pressure) - which you must enter ahead of time)
+        bme_input["Temperature"] = bme280.temperature  #The compensated temperature in degrees Celsius
+        bme_input["Gas"] = bme280.gas  #The gas resistance in ohms
+        bme_input["Humidity"] = bme280.relative_humidity  #The relative humidity in RH %
+        bme_input["Pressure"] = bme280.pressure  #The barometric pressure in hectoPascals
+        bme_input["Altitude"] = bme280.altitude  #The altitude based on current pressure vs the sea level pressure (sea_level_pressure) - which you must enter ahead of time)
         
         print(bme_input)
         time.sleep(5)
