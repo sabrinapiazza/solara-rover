@@ -5,7 +5,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     rover_drivers = get_package_share_directory('rover_drivers')
-    params_file1 = os.path.join(rover_drivers, 'config', 'efk.yaml')
+    params_file1 = os.path.join(rover_drivers, 'config', 'ekf.yaml')
     params_file2 = os.path.join(rover_drivers, 'config', 'navsat.yaml')
 
 
