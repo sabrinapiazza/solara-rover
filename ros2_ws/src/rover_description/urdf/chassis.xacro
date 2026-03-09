@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- Chassis dimensions in meters -->
+    <xacro:property name="chassis_length" value="0.6096"/>  <!-- 24 inches -->
+    <xacro:property name="chassis_width" value="0.254"/>    <!-- 10 inches -->
+    <xacro:property name="chassis_height" value="0.1524"/>  <!-- 6 inches -->
+    <xacro:property name="chassis_mass" value="5.0"/>       <!-- kg, adjust as needed -->
+
+    <link name="chassis_link">
+        <!-- Visual representation -->
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="${chassis_length} ${chassis_width} ${chassis_height}"/> 
+            </geometry>
+            <material name="chassis_blue">
+                <color rgba="0.2 0.4 0.8 1.0"/>
+            </material>
+        </visual>
+
+        <!-- Collision representation -->
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+            </geometry>
+        </collision>
+
+        <!-- Inertial properties -->
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="${chassis_mass}"/>
+            <inertia
+                ixx="${(1/12) * chassis_mass * (chassis_width*chassis_width + chassis_height*chassis_height)}"
+                ixy="0.0"
+                ixz="0.0"
+                iyy="${(1/12) * chassis_mass * (chassis_length*chassis_length + chassis_height*chassis_height)}"
+                iyz="0.0"
+                izz="${(1/12) * chassis_mass * (chassis_length*chassis_length + chassis_width*chassis_width)}"/>
+        </inertial>
+    </link>
+
+</robot>
+
+<!-- 
+The inertia tensor formulas for a rectangular box come from basic physics:
+
+For a box with mass m, length l, width w, height h:
+
+Ixx = (1/12) × m × (w² + h²)
+Iyy = (1/12) × m × (l² + h²)
+Izz = (1/12) × m × (l² + w²) -->
