@@ -5,12 +5,12 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     rover_navigation = get_package_share_directory('rover_navigation')
-    params_file = os.path.join(rover_navigation, 'config', 'slam.yaml')
+    params_file = os.path.join(rover_navigation, 'config', 'slam_params.yaml')
 
     return LaunchDescription([
         Node(
             package='rplidar_ros',
-            executable='rplidarNode',
+            executable='rplidar_composition',
             name='rplidar_node',
             output='screen',
             parameters=[{
