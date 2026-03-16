@@ -16,6 +16,8 @@ def generate_launch_description():
             parameters=[{
                 'frame_id': 'laser',
                 'angle_compensate': True,
+                'serial_port': '/dev/ttyUSB0',
+                'serial_baudrate': 115200,  # try 256000 if this doesn't work
             }]
         ),
         Node(
