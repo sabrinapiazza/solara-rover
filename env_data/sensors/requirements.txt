@@ -1,10 +1,11 @@
 adafruit-circuitpython-mlx90640
-adafruit-circuitpython-bme680
+adafruit-circuitpython-bme280
 adafruit-circuitpython-tsl2591
 numpy
+
+# adafruit-blinka
+Adafruit-Blinka
 lgpio
-adafruit-blinka
-paho.mqtt
-# i2c-tools
+paho-mqtt
 
 #uncomment above to test sensors 
