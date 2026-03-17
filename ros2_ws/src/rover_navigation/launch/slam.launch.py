@@ -34,10 +34,10 @@ def generate_launch_description():
             name='base_to_laser_tf',
             arguments=['0', '0', '0', '0', '0', '0', 'base_link', 'laser']
         ),
-        Node(
-            package='tf2_ros',
-            executable='static_transform_publisher',
-            name='odom_to_base_tf',
-            arguments=['0', '0', '0', '0', '0', '0', 'odom', 'base_link']
-        ),
+        # Node(
+        #     package='tf2_ros',
+        #     executable='static_transform_publisher',
+        #     name='odom_to_base_tf',
+        #     arguments=['0', '0', '0', '0', '0', '0', 'odom', 'base_link']
+        # ),
     ])

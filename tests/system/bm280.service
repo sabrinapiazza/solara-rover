@@ -1,0 +1,18 @@
+[Unit]
+Description=Solara BME280 Environment Sensor (temperature, humidity, pressure)
+After=network.target mosquitto.service
+Requires=mosquitto.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/solara-rover/env_data/sensors
+ExecStart=/usr/bin/python3 /home/ubuntu/solara-rover/env_data/sensors/environment.py
+ExecStart=/home/ubuntu/solara-rover/venv/bin/python3 /home/ubuntu/solara-rover/env_data/sensors/environment.py
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
