@@ -29,3 +29,6 @@ calibration/imu_calibration.json
 
 # Maps (large files - don't commit until final)
 rover_navigation/maps/*.pgm
+
+# virtual environment
+.venv/
