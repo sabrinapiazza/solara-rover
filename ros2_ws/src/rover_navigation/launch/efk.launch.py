@@ -15,7 +15,7 @@ def generate_launch_description():
             executable='ekf_node',
             name='ekf_filter_node',
             output='screen',
-            parameters=[params_file1]
+            parameters=[params_file1],
             arguments=['--ros-args', '--log-level', 'DEBUG'],
         ),
         Node(
