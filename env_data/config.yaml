@@ -23,14 +23,14 @@ sensors:
   thermal:
     frequency: 800000           # I2C frequency in Hz (8e5)
     refresh_rate: "REFRESH_8_Hz"
+  gps:
+    port: "/dev/ttyAMA0"        # update if different on your Pi 5
+    baud: 9600
 
 topics:
-  environment: "sensors/environment"
-  light:       "sensors/light"
-  thermal:     "sensors/thermal"
-  gps:         "sensors/gps"        
-  all:         "sensors/all"
-  status:      "sensors/status"
+  ML:     "sensors/ML"
+  ESRI:   "sensors/ESRI"
+  status: "sensors/status"
 
 subscriber:
   qos: 1
