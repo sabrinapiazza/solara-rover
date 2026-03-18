@@ -86,14 +86,15 @@ ekf_filter_node:
         map_frame: map              # Defaults to "map" if unspecified
         odom_frame: odom            # Defaults to "odom" if unspecified
         base_link_frame: base_link  # Defaults to "base_link" if unspecified
-        world_frame: map           # Defaults to the value of odom_frame if unspecified
+       #  world_frame: map           # Defaults to the value of odom_frame if unspecified; SABRINA: change once we get nav2 working 
+        world_frame: odom #SABRINA: FOR TESTING ONLY, CHANGE BACK TO MAP ONCE WE GET NAV2 WORKING
 
         # The filter accepts an arbitrary number of inputs from each input message type (nav_msgs/Odometry,
         # geometry_msgs/PoseWithCovarianceStamped, geometry_msgs/TwistWithCovarianceStamped,
         # sensor_msgs/Imu). To add an input, simply append the next number in the sequence to its "base" name, e.g., odom0,
         # odom1, twist0, twist1, imu0, imu1, imu2, etc. The value should be the topic name. These parameters obviously have no
         # default values, and must be specified.
-        odom0: /odometry/gps
+        odom0: /odometry/gps #SABRINA: UNCOMMENT FROM HERE 
 
         # Each sensor reading updates some or all of the filter's state. These options give you greater control over which
         # values from each measurement are fed to the filter. For example, if you have an odometry message as input, but only
@@ -148,39 +149,39 @@ ekf_filter_node:
         # For messages that have both pose and twist data, the parameter specifies to which part of the message we are applying
         # the thresholds.
         odom0_pose_rejection_threshold: 5.0
-        odom0_twist_rejection_threshold: 1.0
+        odom0_twist_rejection_threshold: 1.0 #SABRINA: TO HERE 
 
-        # Further input parameter examples
-        # odom1: example/odom2
-        # odom1_config: [false, false, true,
-        #                false, false, false,
-        #                false, false, false,
-        #                false, false, true,
-        #                false, false, false]
-        # odom1_differential: false
-        # odom1_relative: true
-        # odom1_queue_size: 2
-        # odom1_pose_rejection_threshold: 2.0
-        # odom1_twist_rejection_threshold: 0.2
-        # pose0: example/pose
-        # pose0_config: [true,  true,  false,
-        #                false, false, false,
-        #                false, false, false,
-        #                false, false, false,
-        #                false, false, false]
-        # pose0_differential: true
-        # pose0_relative: false
-        # pose0_queue_size: 5
-        # pose0_rejection_threshold: 2.0  # Note the difference in parameter name
+       #  # Further input parameter examples
+       #  # odom1: example/odom2
+       #  # odom1_config: [false, false, true,
+       #  #                false, false, false,
+       #  #                false, false, false,
+       #  #                false, false, true,
+       #  #                false, false, false]
+       #  # odom1_differential: false
+       #  # odom1_relative: true
+       #  # odom1_queue_size: 2
+       #  # odom1_pose_rejection_threshold: 2.0
+       #  # odom1_twist_rejection_threshold: 0.2
+       #  # pose0: example/pose
+       #  # pose0_config: [true,  true,  false,
+       #  #                false, false, false,
+       #  #                false, false, false,
+       #  #                false, false, false,
+       #  #                false, false, false]
+       #  # pose0_differential: true
+       #  # pose0_relative: false
+       #  # pose0_queue_size: 5
+       #  # pose0_rejection_threshold: 2.0  # Note the difference in parameter name
 
-        # twist0: example/twist
-        # twist0_config: [false, false, false,
-        #                 false, false, false,
-        #                 true,  true,  true,
-        #                 false, false, false,
-        #                 false, false, false]
-        # twist0_queue_size: 3
-        # twist0_rejection_threshold: 2.0
+       #  # twist0: example/twist
+       #  # twist0_config: [false, false, false,
+       #  #                 false, false, false,
+       #  #                 true,  true,  true,
+       #  #                 false, false, false,
+       #  #                 false, false, false]
+       #  # twist0_queue_size: 3
+       #  # twist0_rejection_threshold: 2.0
 
         imu0: /imu/data
         # imu0_config: [false, false, false,
@@ -191,7 +192,7 @@ ekf_filter_node:
 
         imu0_config: [false, false, false,   # x, y, z
                true,  true,  true,   # roll, pitch, yaw
-               false, false, false,  # vx, vy, vz
+               false, false, false,  # vx, vy, vz #SABRINA: CHANGE BACK TO FALSE ONCE OUTSIDE 
                true,  true,  true,   # vroll, vpitch, vyaw
                true,  true,  true]   # ax, ay, az
         imu0_differential: false

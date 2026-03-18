@@ -101,7 +101,8 @@ class GPSDriver(Node):
         if not value:
             return 0.0
 
-        if len(value) > 7:
+        # if len(value) > 7:
+        if hemisphere in ["E", "W"]:  # longitude: DDDMM.MMMM
             degrees = float(value[:3])
             minutes = float(value[3:])
         else:
