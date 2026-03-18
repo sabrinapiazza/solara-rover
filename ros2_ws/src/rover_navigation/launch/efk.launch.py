@@ -16,6 +16,7 @@ def generate_launch_description():
             name='ekf_filter_node',
             output='screen',
             parameters=[params_file1]
+            arguments=['--ros-args', '--log-level', 'DEBUG'],
         ),
         Node(
             package='robot_localization',
