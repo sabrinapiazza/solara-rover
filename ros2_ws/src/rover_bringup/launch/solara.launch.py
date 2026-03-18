@@ -23,7 +23,7 @@ def generate_launch_description():
 
     ekf = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('rover_navigation'), 'launch', 'ekf.launch.py')
+            os.path.join(get_package_share_directory('rover_navigation'), 'launch', 'efk.launch.py')
         )
     )
 
