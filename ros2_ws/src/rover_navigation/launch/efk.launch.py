@@ -25,6 +25,7 @@ def generate_launch_description():
             parameters=[params_file2],
              remappings=[
                 ('imu/data', '/imu/data'),
+                ('imu', 'imu/data'),
                 ('gps/fix', '/gps/fix'),
                 ('odometry/filtered', '/odometry/filtered'),
             ]
