@@ -40,13 +40,19 @@ add_executable(claw_controllerv3 claw_controllerv3.cpp )
 pico_set_program_name(claw_controllerv3 "claw_controllerv3")
 pico_set_program_version(claw_controllerv3 "0.1")
 
+add_executable(claw_dc claw_dc.cpp) #SABRINA ADDED 
+pico_add_extra_outputs(claw_dc) #SABRINA ADDED
+
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(claw_controllerv3 0)
 pico_enable_stdio_usb(claw_controllerv3 0)
+pico_enable_stdio_usb(claw_dc 1)
 
 # Add the standard library to the build
 target_link_libraries(claw_controllerv3
         pico_stdlib)
+
+target_link_libraries(claw_dc pico_stdlib hardware_pwm hardware_gpio) #SABRINA ADDED 
 
 # Add the standard include files to the build
 target_include_directories(claw_controllerv3 PRIVATE
