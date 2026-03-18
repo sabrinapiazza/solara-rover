@@ -17,7 +17,7 @@ jobs:
     - name: Install sensor libraries
       run: |
         pip install adafruit-circuitpython-mlx90640 || true
-        pip install adafruit-circuitpython-bme680 || true
+        pip install adafruit-circuitpython-bme280 || true
         pip install adafruit-circuitpython-tsl2591 || true
         pip install numpy || true
     

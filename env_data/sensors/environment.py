@@ -1,11 +1,7 @@
 # BME280 sensor driver
 # Reads temperature, humidity, pressure, air quality
 # Returns environmental measurements
-# https://www.rp2040learning.com/code/circuitpython/raspberry-pi-pico-and-bme680-gas-sensor-circuitpython-example.php
-# https://docs.circuitpython.org/projects/bme680/en/latest/api.html#implementation-notes
-# https://docs.circuitpython.org/projects/bme680/en/latest/
 
-# import adafruit_bme680
 import adafruit_bme280.basic as adafruit_bme280
 import time
 import board    #breakout-specific pin identities
