@@ -32,3 +32,5 @@ rover_navigation/maps/*.pgm
 
 .pio/
 .vscode/
+# virtual environment
+.venv/
