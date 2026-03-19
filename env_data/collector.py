@@ -99,7 +99,7 @@ def run_test_loop():
         timestamp    = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
         env_data     = environment.get_data()
         light_data   = light.get_data()
-        thermal_data = thermal.get_data()
+        # thermal_data = thermal.get_data()
         gps_data     = get_gps_data()
 
         imu_data = {
@@ -117,7 +117,7 @@ def run_test_loop():
         # What would be sent to the ESRI MQTT topic
         print("\n========== ESRI TOPIC ==========")
         print(f"  timestamp: {timestamp}")
-        print(f"  thermal:   {thermal_data}")
+        # print(f"  thermal:   {thermal_data}")
         print(f"  gps:       {gps_data}")
         print(f"  imu:       {imu_data}")
         print("================================\n")
