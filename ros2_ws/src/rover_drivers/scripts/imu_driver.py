@@ -193,6 +193,13 @@ class IMUDriver(Node):
 
         # Setting covariance[0] to -1 tells downstream nodes (nav2, EKF) that covariance is unknown. 
         # Setting to 0 - that means "perfect certainty" and will break sensor fusion.
+        # msg.orientation_covariance[0]         = -1.0
+        # msg.angular_velocity_covariance[0]    = -1.0
+        # msg.linear_acceleration_covariance[0] = -1.0
+
+
+        # Diagonal covariance matrices - values represent sensor noise variance
+        # BNO055 typical values
         msg.orientation_covariance = [
             0.002, 0.0, 0.0,
             0.0, 0.002, 0.0,
