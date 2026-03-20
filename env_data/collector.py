@@ -63,14 +63,14 @@ INTERVAL = config["collector"]["poll_interval"]
 #         "linear_acceleration": {"x": sensor.acceleration[0],  "y": sensor.acceleration[1],  "z": sensor.acceleration[2]},
 #     }
 
-# def get_gps_data():
-#     ser = serial.Serial('/dev/ttyAMA0', baudrate=9600, timeout=1)
-#     for _ in range(20):  # try up to 20 lines to find a valid fix
-#         line = ser.readline().decode('ascii', errors='replace')
-#         if line.startswith('$GNGGA') or line.startswith('$GPGGA'):
-#             msg = pynmea2.parse(line)
-#             return {"latitude": msg.latitude, "longitude": msg.longitude, "altitude": msg.altitude}
-#     return {"latitude": None, "longitude": None, "altitude": None}
+def get_gps_data():
+    ser = serial.Serial('/dev/ttyAMA0', baudrate=9600, timeout=1)
+    for _ in range(20):  # try up to 20 lines to find a valid fix
+        line = ser.readline().decode('ascii', errors='replace')
+        if line.startswith('$GNGGA') or line.startswith('$GPGGA'):
+            msg = pynmea2.parse(line)
+            return {"latitude": msg.latitude, "longitude": msg.longitude, "altitude": msg.altitude}
+    return {"latitude": None, "longitude": None, "altitude": None}
 
 
 
@@ -100,7 +100,7 @@ def run_test_loop():
         env_data     = environment.get_data()
         light_data   = light.get_data()
         thermal_data = thermal.get_data()
-        # gps_data     = get_gps_data()
+        gps_data     = get_gps_data()
 
         # imu_data = {
         #     "orientation":         {"x": sensor.quaternion[1],   "y": sensor.quaternion[2],   "z": sensor.quaternion[3],   "w": sensor.quaternion[0]},
@@ -118,7 +118,7 @@ def run_test_loop():
         print("\n========== ESRI TOPIC ==========")
         print(f"  timestamp: {timestamp}")
         print(f"  thermal:   {thermal_data}")
-        # print(f"  gps:       {gps_data}")
+        print(f"  gps:       {gps_data}")
         # print(f"  imu:       {imu_data}")
         print("================================\n")
 
