@@ -15,6 +15,8 @@ import adafruit_bno055           # Adafruit CircuitPython driver for BNO055
 import time
 import json
 import os
+import busio
+import digitalio
 
 # Path to calibration file stored in the repo's calibration/ folder.
 # __file__ is this script, ../../../../ walks up to the project root.
@@ -46,7 +48,10 @@ class IMUDriver(Node):
         # Initialize I2C bus and BNO055 sensor.
         # Fatal error if sensor not found - no point running without hardware.
         try:
-            i2c = board.I2C()
+            # these two lines below are specifying to work on a different i2c bus
+            i2c = busio.I2C(scl=board.D24, sda=board.D23)
+            self.sensor = adafruit_bno055.BNO055_I2C(i2c)
+
             self.sensor = adafruit_bno055.BNO055_I2C(i2c)
             self.get_logger().info('BNO055 connected via I2C')
         except Exception as e:
