@@ -68,9 +68,9 @@ class I2CBus:
     def writeto(self, addr, buf, **kwargs):
         self._bus.write_bytes(addr, bytes(buf))
     def writeto_then_readfrom(self, addr, out, buf, **kwargs):
-        reg = out[0]
-        result = self._bus.read_i2c_block_data(addr, reg, len(buf))
-        for i, b in enumerate(result): buf[i] = b
+        self._bus.write_byte(addr, out[0])  # write register address only
+        result = self._bus.read_i2c_block_data(addr, out[0], len(buf))
+        for i in range(len(buf)): buf[i] = result[i]
         
 def get_imu_data():
     # change made to accomodate imu on a different i2c bus
