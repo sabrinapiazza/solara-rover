@@ -93,7 +93,7 @@ def get_imu_data():
 def run_test_loop():
     # Initialize IMU once - avoids re-initializing hardware every poll cycle
     i2c    = board.I2C()
-    # sensor = adafruit_bno055.BNO055_I2C(i2c)
+    sensor = adafruit_bno055.BNO055_I2C(i2c)
 
     while True:
         timestamp    = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
@@ -102,11 +102,11 @@ def run_test_loop():
         # thermal_data = thermal.get_data()
         # gps_data     = get_gps_data()
 
-        # imu_data = {
-        #     "orientation":         {"x": sensor.quaternion[1],   "y": sensor.quaternion[2],   "z": sensor.quaternion[3],   "w": sensor.quaternion[0]},
-        #     "angular_velocity":    {"x": sensor.gyro[0],         "y": sensor.gyro[1],         "z": sensor.gyro[2]},
-        #     "linear_acceleration": {"x": sensor.acceleration[0], "y": sensor.acceleration[1], "z": sensor.acceleration[2]},
-        # }
+        imu_data = {
+            "orientation":         {"x": sensor.quaternion[1],   "y": sensor.quaternion[2],   "z": sensor.quaternion[3],   "w": sensor.quaternion[0]},
+            "angular_velocity":    {"x": sensor.gyro[0],         "y": sensor.gyro[1],         "z": sensor.gyro[2]},
+            "linear_acceleration": {"x": sensor.acceleration[0], "y": sensor.acceleration[1], "z": sensor.acceleration[2]},
+        }
 
         # What would be sent to the ML MQTT topic
         print("\n========== ML TOPIC ==========")
@@ -119,7 +119,7 @@ def run_test_loop():
         print(f"  timestamp: {timestamp}")
         # print(f"  thermal:   {thermal_data}")
         # print(f"  gps:       {gps_data}")
-        # print(f"  imu:       {imu_data}")
+        print(f"  imu:       {imu_data}")
         print("================================\n")
 
         time.sleep(INTERVAL)
