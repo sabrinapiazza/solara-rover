@@ -100,8 +100,32 @@ def debug_bus():
 
     print("====================================\n")
     
-i2c = busio.I2C(board.SCL, board.SDA)
-sensor = adafruit_bno055.BNO055_I2C(i2c)
+import smbus2
+from adafruit_bno055 import BNO055_I2C
+
+class I2CBus:
+    def __init__(self, bus_num):
+        self._bus = smbus2.SMBus(bus_num)
+    def try_lock(self): return True
+    def unlock(self): pass
+    def scan(self): return []
+    def writeto(self, addr, buf, **kwargs):
+        self._bus.write_bytes(addr, bytes(buf))
+    def readfrom_into(self, addr, buf, **kwargs):
+        result = self._bus.read_bytes(addr, len(buf))
+        for i, b in enumerate(result): buf[i] = b
+    def writeto_then_readfrom(self, addr, out, buf,
+                               out_start=0, out_end=None,
+                               in_start=0, in_end=None, **kwargs):
+        out_end = out_end or len(out)
+        in_end  = in_end  or len(buf)
+        read_len = in_end - in_start
+        result = self._bus.read_i2c_block_data(addr, out[out_start], read_len)
+        for i in range(read_len):
+            buf[in_start + i] = result[i]
+            
+i2c = I2CBus(1)  # i2c-1 since wires are still there
+sensor = BNO055_I2C(i2c, address=0x28)
 
 def get_imu_data():
     # i2c = board.I2C()
@@ -142,7 +166,7 @@ def run_test_loop():
     # Initialize IMU once - avoids re-initializing hardware every poll cycle
     # i2c    = board.I2C()
     # sensor = adafruit_bno055.BNO055_I2C(i2c)
-    debug_bus()
+    # debug_bus()
     while True:
         timestamp    = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
         env_data     = environment.get_data()
