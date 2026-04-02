@@ -59,7 +59,7 @@ INTERVAL = config["collector"]["poll_interval"]
 
 def get_imu_data():
     # change made to accomodate imu on a different i2c bus
-    i2c = smbus2.SMBus(11)
+    i2c = smbus2.SMBus(4)
     sensor = BNO055_I2C(i2c)
     return {
         "orientation":         {"x": sensor.quaternion[1],    "y": sensor.quaternion[2],    "z": sensor.quaternion[3],    "w": sensor.quaternion[0]},
@@ -97,7 +97,7 @@ def get_gps_data():
 def run_test_loop():
     # Initialize IMU once - avoids re-initializing hardware every poll cycle
     # change made to accomodate imu on a different i2c bus 
-    i2c = smbus2.SMBus(11)
+    i2c = smbus2.SMBus(4)
     sensor = BNO055_I2C(i2c)
 
     while True:
