@@ -30,6 +30,7 @@ from sensors import environment, light, thermal
 
 # [REMOVE FOR PRODUCTION] 
 import board
+import busio
 import adafruit_bno055
 import serial
 import pynmea2
@@ -53,10 +54,11 @@ INTERVAL = config["collector"]["poll_interval"]
 # In production, GPS and IMU data come from ROS2 subscriptions
 # in CollectorNode (gps_callback / imu_callback).
 
+i2c = busio.I2C(board.SCL, board.SDA)
+sensor = adafruit_bno055.BNO055_I2C(i2c)
 
 def get_imu_data():
-    i2c = board.I2C()
-    sensor = adafruit_bno055.BNO055_I2C(i2c)
+    # i2c = board.I2C()
     return {
         "orientation":         {"x": sensor.quaternion[1],    "y": sensor.quaternion[2],    "z": sensor.quaternion[3],    "w": sensor.quaternion[0]},
         "angular_velocity":    {"x": sensor.gyro[0],          "y": sensor.gyro[1],          "z": sensor.gyro[2]},
@@ -92,8 +94,8 @@ def get_imu_data():
 
 def run_test_loop():
     # Initialize IMU once - avoids re-initializing hardware every poll cycle
-    i2c    = board.I2C()
-    sensor = adafruit_bno055.BNO055_I2C(i2c)
+    # i2c    = board.I2C()
+    # sensor = adafruit_bno055.BNO055_I2C(i2c)
 
     while True:
         timestamp    = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
