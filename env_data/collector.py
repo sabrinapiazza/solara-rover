@@ -34,7 +34,8 @@ import adafruit_bno055
 import serial
 import pynmea2
 import busio
-from adafruit_extended_bus import ExtendedI2C
+import smbus2
+from adafruit_bno055 import BNO055_I2C
 
 
 # LOAD CONFIG
@@ -58,8 +59,8 @@ INTERVAL = config["collector"]["poll_interval"]
 
 def get_imu_data():
     # change made to accomodate imu on a different i2c bus
-    i2c = ExtendedI2C(4)  # i2c-4, your new software bus
-    sensor = adafruit_bno055.BNO055_I2C(i2c)
+    i2c = smbus2.SMBus(4)
+    sensor = BNO055_I2C(i2c)
     return {
         "orientation":         {"x": sensor.quaternion[1],    "y": sensor.quaternion[2],    "z": sensor.quaternion[3],    "w": sensor.quaternion[0]},
         "angular_velocity":    {"x": sensor.gyro[0],          "y": sensor.gyro[1],          "z": sensor.gyro[2]},
@@ -96,8 +97,8 @@ def get_gps_data():
 def run_test_loop():
     # Initialize IMU once - avoids re-initializing hardware every poll cycle
     # change made to accomodate imu on a different i2c bus 
-    i2c = busio.I2C(scl=board.D24, sda=board.D23)
-    sensor = adafruit_bno055.BNO055_I2C(i2c)
+    i2c = smbus2.SMBus(4)
+    sensor = BNO055_I2C(i2c)
 
     while True:
         timestamp    = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
