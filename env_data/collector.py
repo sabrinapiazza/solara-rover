@@ -34,6 +34,7 @@ import adafruit_bno055
 import serial
 import pynmea2
 import busio
+from adafruit_extended_bus import ExtendedI2C
 
 
 # LOAD CONFIG
@@ -57,7 +58,7 @@ INTERVAL = config["collector"]["poll_interval"]
 
 def get_imu_data():
     # change made to accomodate imu on a different i2c bus
-    i2c = busio.I2C(scl=board.D24, sda=board.D23)
+    i2c = ExtendedI2C(4)  # i2c-4, your new software bus
     sensor = adafruit_bno055.BNO055_I2C(i2c)
     return {
         "orientation":         {"x": sensor.quaternion[1],    "y": sensor.quaternion[2],    "z": sensor.quaternion[3],    "w": sensor.quaternion[0]},

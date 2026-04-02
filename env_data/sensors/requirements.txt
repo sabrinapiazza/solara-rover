@@ -10,3 +10,4 @@ numpy
 Adafruit-Blinka
 pyyaml
 paho-mqtt
+adafruit-circuitpython-extended-bus
