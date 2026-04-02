@@ -31,7 +31,6 @@ from sensors import environment, light, thermal
 # [REMOVE FOR PRODUCTION] 
 import board
 import busio
-import adafruit_bno055
 import serial
 import pynmea2
 
@@ -55,12 +54,13 @@ INTERVAL = config["collector"]["poll_interval"]
 # in CollectorNode (gps_callback / imu_callback).
 
 import smbus2
+from adafruit_bno055 import BNO055_I2C
 
 def debug_bus():
     print("\n========== I2C BUS DEBUG ==========")
     
     # scan i2c-1
-    bus1 = smbus2.SMBus(1)
+    bus1 = smbus2.SMBus(4)
     print("Scanning i2c-1...")
     found = []
     for addr in range(0x03, 0x78):
@@ -91,7 +91,7 @@ def debug_bus():
     # test BNO055 chip id directly
     print("Testing BNO055 chip ID directly...")
     try:
-        bus = smbus2.SMBus(1)
+        bus = smbus2.SMBus(4)
         chip_id = bus.read_byte_data(0x28, 0x00)
         print(f"  BNO055 chip id on i2c-1: {hex(chip_id)} ({'OK' if chip_id == 0xa0 else 'BAD'})")
         bus.close()
@@ -100,8 +100,6 @@ def debug_bus():
 
     print("====================================\n")
     
-import smbus2
-from adafruit_bno055 import BNO055_I2C
 
 class I2CBus:
     def __init__(self, bus_num):
