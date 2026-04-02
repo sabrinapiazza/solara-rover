@@ -109,12 +109,15 @@ class I2CBus:
     def scan(self): return []
     def writeto(self, addr, buf, **kwargs):
         if len(buf) == 0:
-            self._bus.write_byte(addr, 0)
+            try:
+                self._bus.read_byte(addr)  # probe only
+            except:
+                pass
         else:
             self._bus.write_i2c_block_data(addr, buf[0], list(buf[1:]))
     def readfrom_into(self, addr, buf, **kwargs):
-        result = self._bus.read_bytes(addr, len(buf))
-        for i, b in enumerate(result): buf[i] = b
+        for i in range(len(buf)):
+            buf[i] = self._bus.read_byte(addr)
     def writeto_then_readfrom(self, addr, out, buf,
                                out_start=0, out_end=None,
                                in_start=0, in_end=None, **kwargs):
