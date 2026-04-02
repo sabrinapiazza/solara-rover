@@ -60,7 +60,7 @@ INTERVAL = config["collector"]["poll_interval"]
 def get_imu_data():
     # change made to accomodate imu on a different i2c bus
     i2c = smbus2.SMBus(4)
-    sensor = BNO055_I2C(i2c)
+    sensor = BNO055_I2C(i2c, address=0x28)
     return {
         "orientation":         {"x": sensor.quaternion[1],    "y": sensor.quaternion[2],    "z": sensor.quaternion[3],    "w": sensor.quaternion[0]},
         "angular_velocity":    {"x": sensor.gyro[0],          "y": sensor.gyro[1],          "z": sensor.gyro[2]},
@@ -98,7 +98,7 @@ def run_test_loop():
     # Initialize IMU once - avoids re-initializing hardware every poll cycle
     # change made to accomodate imu on a different i2c bus 
     i2c = smbus2.SMBus(4)
-    sensor = BNO055_I2C(i2c)
+    sensor = BNO055_I2C(i2c, address=0x28)
 
     while True:
         timestamp    = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
