@@ -107,14 +107,15 @@ class I2CBus:
     def try_lock(self): return True
     def unlock(self): pass
     def scan(self): return []
-    def writeto(self, addr, buf, **kwargs):
-        if len(buf) == 0:
-            try:
-                self._bus.read_byte(addr)  # probe only
-            except:
-                pass
-        else:
-            self._bus.write_i2c_block_data(addr, buf[0], list(buf[1:]))
+    def writeto_then_readfrom(self, addr, out, buf,
+                            out_start=0, out_end=None,
+                            in_start=0, in_end=None, **kwargs):
+        out_end  = out_end or len(out)
+        in_end   = in_end  or len(buf)
+        read_len = in_end - in_start
+        reg = out[out_start]
+        for i in range(read_len):
+            buf[in_start + i] = self._bus.read_byte_data(addr, reg + i)
     def readfrom_into(self, addr, buf, **kwargs):
         for i in range(len(buf)):
             buf[i] = self._bus.read_byte(addr)
