@@ -56,10 +56,25 @@ INTERVAL = config["collector"]["poll_interval"]
 # In production, GPS and IMU data come from ROS2 subscriptions
 # in CollectorNode (gps_callback / imu_callback).
 
-
+class I2CBus:
+    def __init__(self, bus_num):
+        self._bus = smbus2.SMBus(bus_num)
+    def try_lock(self): return True
+    def unlock(self): pass
+    def scan(self): return []
+    def readfrom_into(self, addr, buf, **kwargs):
+        result = self._bus.read_bytes(addr, len(buf))
+        for i, b in enumerate(result): buf[i] = b
+    def writeto(self, addr, buf, **kwargs):
+        self._bus.write_bytes(addr, bytes(buf))
+    def writeto_then_readfrom(self, addr, out, buf, **kwargs):
+        reg = out[0]
+        result = self._bus.read_i2c_block_data(addr, reg, len(buf))
+        for i, b in enumerate(result): buf[i] = b
+        
 def get_imu_data():
     # change made to accomodate imu on a different i2c bus
-    i2c = smbus2.SMBus(4)
+    i2c = I2CBus(4)
     sensor = BNO055_I2C(i2c, address=0x28)
     return {
         "orientation":         {"x": sensor.quaternion[1],    "y": sensor.quaternion[2],    "z": sensor.quaternion[3],    "w": sensor.quaternion[0]},
@@ -97,7 +112,7 @@ def get_gps_data():
 def run_test_loop():
     # Initialize IMU once - avoids re-initializing hardware every poll cycle
     # change made to accomodate imu on a different i2c bus 
-    i2c = smbus2.SMBus(4)
+    i2c = I2CBus(4)
     sensor = BNO055_I2C(i2c, address=0x28)
 
     while True:
