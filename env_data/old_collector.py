@@ -54,6 +54,52 @@ INTERVAL = config["collector"]["poll_interval"]
 # In production, GPS and IMU data come from ROS2 subscriptions
 # in CollectorNode (gps_callback / imu_callback).
 
+import smbus2
+
+def debug_bus():
+    print("\n========== I2C BUS DEBUG ==========")
+    
+    # scan i2c-1
+    bus1 = smbus2.SMBus(1)
+    print("Scanning i2c-1...")
+    found = []
+    for addr in range(0x03, 0x78):
+        try:
+            bus1.read_byte(addr)
+            found.append(hex(addr))
+        except:
+            pass
+    print(f"  i2c-1 devices: {found}")
+    bus1.close()
+
+    # scan i2c-4
+    try:
+        bus4 = smbus2.SMBus(4)
+        print("Scanning i2c-4...")
+        found = []
+        for addr in range(0x03, 0x78):
+            try:
+                bus4.read_byte(addr)
+                found.append(hex(addr))
+            except:
+                pass
+        print(f"  i2c-4 devices: {found}")
+        bus4.close()
+    except Exception as e:
+        print(f"  i2c-4 not available: {e}")
+
+    # test BNO055 chip id directly
+    print("Testing BNO055 chip ID directly...")
+    try:
+        bus = smbus2.SMBus(1)
+        chip_id = bus.read_byte_data(0x28, 0x00)
+        print(f"  BNO055 chip id on i2c-1: {hex(chip_id)} ({'OK' if chip_id == 0xa0 else 'BAD'})")
+        bus.close()
+    except Exception as e:
+        print(f"  BNO055 on i2c-1 failed: {e}")
+
+    print("====================================\n")
+    
 i2c = busio.I2C(board.SCL, board.SDA)
 sensor = adafruit_bno055.BNO055_I2C(i2c)
 
@@ -96,7 +142,7 @@ def run_test_loop():
     # Initialize IMU once - avoids re-initializing hardware every poll cycle
     # i2c    = board.I2C()
     # sensor = adafruit_bno055.BNO055_I2C(i2c)
-
+    debug_bus()
     while True:
         timestamp    = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
         env_data     = environment.get_data()
