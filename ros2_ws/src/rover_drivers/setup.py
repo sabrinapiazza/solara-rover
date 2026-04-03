@@ -32,7 +32,6 @@ setup(
             'gps_driver = scripts.gps_driver:main',
             'imu_driver = scripts.imu_driver:main',
             'ultrasonic_bridge = scripts.ultrasonic_bridge:main',
-            # 'ultrasonic_bridge = rover_drivers.scripts.ultrasonic_bridge:main',
         ],
     },
 )
