@@ -7,7 +7,6 @@ package_name = 'rover_drivers'
 setup(
     name=package_name,
     version='0.1.0',
-    # packages=[package_name],
     packages=find_packages(),
     data_files=[
         ('share/ament_index/resource_index/packages',
@@ -32,6 +31,8 @@ setup(
             # 'motor_bridge = rover_drivers.scripts.motor_bridge:main',
             'gps_driver = scripts.gps_driver:main',
             'imu_driver = scripts.imu_driver:main',
+            'ultrasonic_bridge = scripts.ultrasonic_bridge:main',
+            # 'ultrasonic_bridge = rover_drivers.scripts.ultrasonic_bridge:main',
         ],
     },
 )

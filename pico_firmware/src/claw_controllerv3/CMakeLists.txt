@@ -63,7 +63,7 @@ target_include_directories(claw_controllerv3 PRIVATE
 target_link_libraries(claw_controllerv3 
             hardware_pwm
             hardware_clocks
-        
+            pico_cyw43_arch_none
         )
 
 pico_add_extra_outputs(claw_controllerv3)
