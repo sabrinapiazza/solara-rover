@@ -94,7 +94,7 @@ def run_test_loop():
     sensor = BNO055_I2C(i2c, address=0x28)
 
     while True:
-        timestamp = datetime.now(pytz.timezone('America/Los_Angeles')).strftime("%Y-%m-%dT%H:%M:%S%z")
+        timestamp = datetime.now(pytz.timezone('America/Los_Angeles')).strftime("%Y-%m-%dT%H:%M:%S PST")
         light_data   = light.get_data()
         thermal_data = thermal.get_data()
         gps_data     = get_gps_data()
