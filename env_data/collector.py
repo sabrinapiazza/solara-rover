@@ -18,13 +18,15 @@
 # 2. Uncomment all [UNCOMMENT FOR PRODUCTION] blocks
 # 3. Run gps_driver.py and imu_driver.py as separate processes
 
-import time, yaml
+import yaml
 from sensors import environment, light, thermal
 import paho.mqtt.client as mqtt
 import json
 from sensor_msgs.msg import NavSatFix, Imu
 import rclpy
 from rclpy.node import Node
+import pytz
+from datetime import datetime
 
 # [REMOVE FOR PRODUCTION] 
 import board
@@ -92,8 +94,7 @@ def run_test_loop():
     sensor = BNO055_I2C(i2c, address=0x28)
 
     while True:
-        timestamp    = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-        env_data     = environment.get_data()
+        timestamp = datetime.now(pytz.timezone('America/Los_Angeles')).strftime("%Y-%m-%dT%H:%M:%S%z")
         light_data   = light.get_data()
         thermal_data = thermal.get_data()
         gps_data     = get_gps_data()
