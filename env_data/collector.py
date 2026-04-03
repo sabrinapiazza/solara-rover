@@ -72,8 +72,6 @@ def get_gps_data():
             return {"latitude": msg.latitude, "longitude": msg.longitude, "altitude": msg.altitude}
     return {"latitude": None, "longitude": None, "altitude": None}
 
-# [REMOVE FOR PRODUCTION] - Standalone test loop.
-# In production this is replaced by CollectorNode (ROS2 timer).
 def run_test_loop():
     # IMU LOGIC NOW MOVED INSIDE RUN_TEST_LOOP()
     i2c = I2CBus(4)  # BNO055 on i2c-4
