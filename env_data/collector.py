@@ -34,15 +34,6 @@ import pynmea2
 from adafruit_bno055 import BNO055_I2C
 import smbus2
 
-# LOAD CONFIG
-with open("config.yaml", "r") as f:
-    config = yaml.safe_load(f)
-broker   = config["broker"]
-topics   = config["topics"]
-INTERVAL = config["collector"]["poll_interval"]
-QoS = 1
-
-
 # [REMOVE FOR PRODUCTION] - Direct hardware reads for testing.
 # In production, GPS and IMU data come from ROS2 subscriptions
 # in CollectorNode (gps_callback / imu_callback).
@@ -94,19 +85,6 @@ def get_gps_data():
             return {"latitude": msg.latitude, "longitude": msg.longitude, "altitude": msg.altitude}
     return {"latitude": None, "longitude": None, "altitude": None}
 
-
-# MQTT CALLBACKS
-def on_connect(client, userdata, flags, rc):
-    print(f"[MQTT] CONNACK rc={rc}")
-
-def on_publish(client, userdata, mid):
-    print(f"[MQTT] PUBACK received for PacketId={mid}")
-
-def on_disconnect(client, userdata, rc):
-    if rc != 0:
-        print(f"[MQTT] Unexpected disconnect (rc={rc}). Will auto-reconnect.")
-
-
 # [REMOVE FOR PRODUCTION] - Standalone test loop.
 # In production this is replaced by CollectorNode (ROS2 timer).
 def run_test_loop():
@@ -142,6 +120,25 @@ def run_test_loop():
 
         time.sleep(INTERVAL)
 
+
+# LOAD CONFIG
+with open("config.yaml", "r") as f:
+    config = yaml.safe_load(f)
+broker   = config["broker"]
+topics   = config["topics"]
+INTERVAL = config["collector"]["poll_interval"]
+QoS = 1
+
+# MQTT CALLBACKS
+def on_connect(client, userdata, flags, rc):
+    print(f"[MQTT] CONNACK rc={rc}")
+
+def on_publish(client, userdata, mid):
+    print(f"[MQTT] PUBACK received for PacketId={mid}")
+
+def on_disconnect(client, userdata, rc):
+    if rc != 0:
+        print(f"[MQTT] Unexpected disconnect (rc={rc}). Will auto-reconnect.")
 
 # COLLECTOR NODE
 # [UNCOMMENT FOR PRODUCTION]
