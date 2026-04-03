@@ -20,62 +20,65 @@
 
 import time, yaml
 from sensors import environment, light, thermal
-
-# [UNCOMMENT FOR PRODUCTION]
-# import paho.mqtt.client as mqtt
-# import json
-# from sensor_msgs.msg import NavSatFix, Imu
-# import rclpy
-# from rclpy.node import Node
+import paho.mqtt.client as mqtt
+import json
+from sensor_msgs.msg import NavSatFix, Imu
+import rclpy
+from rclpy.node import Node
 
 # [REMOVE FOR PRODUCTION] 
 import board
-import adafruit_bno055
+import busio
 import serial
 import pynmea2
-import busio
-import smbus2
 from adafruit_bno055 import BNO055_I2C
-
+import smbus2
 
 # LOAD CONFIG
 with open("config.yaml", "r") as f:
     config = yaml.safe_load(f)
-
-# [UNCOMMENT FOR PRODUCTION]
-# broker   = config["broker"]
-# topics   = config["topics"]
-
+broker   = config["broker"]
+topics   = config["topics"]
 INTERVAL = config["collector"]["poll_interval"]
-
-# [UNCOMMENT FOR PRODUCTION] 
-# QoS = 1
+QoS = 1
 
 
 # [REMOVE FOR PRODUCTION] - Direct hardware reads for testing.
 # In production, GPS and IMU data come from ROS2 subscriptions
 # in CollectorNode (gps_callback / imu_callback).
-
 class I2CBus:
     def __init__(self, bus_num):
         self._bus = smbus2.SMBus(bus_num)
     def try_lock(self): return True
     def unlock(self): pass
     def scan(self): return []
-    def readfrom_into(self, addr, buf, **kwargs):
-        result = self._bus.read_bytes(addr, len(buf))
-        for i, b in enumerate(result): buf[i] = b
     def writeto(self, addr, buf, **kwargs):
-        self._bus.write_bytes(addr, bytes(buf))
-    def writeto_then_readfrom(self, addr, out, buf, **kwargs):
-        self._bus.write_byte(addr, out[0])  # write register address only
-        result = self._bus.read_i2c_block_data(addr, out[0], len(buf))
-        for i in range(len(buf)): buf[i] = result[i]
-        
+        if len(buf) == 0:
+            try:
+                self._bus.read_byte(addr)
+            except:
+                pass
+        else:
+            self._bus.write_i2c_block_data(addr, buf[0], list(buf[1:]))
+    def readfrom_into(self, addr, buf, **kwargs):
+        for i in range(len(buf)):
+            buf[i] = self._bus.read_byte(addr)
+    def writeto_then_readfrom(self, addr, out, buf,
+                           out_start=0, out_end=None,
+                           in_start=0, in_end=None, **kwargs):
+        out_end  = out_end or len(out)
+        in_end   = in_end  or len(buf)
+        read_len = in_end - in_start
+        reg = out[out_start]
+        for i in range(read_len):
+            for attempt in range(5):  # retry up to 5 times
+                try:
+                    buf[in_start + i] = self._bus.read_byte_data(addr, reg + i)
+                    break
+                except OSError:
+                    time.sleep(0.01)  # wait 10ms and retry
+
 def get_imu_data():
-    # change made to accomodate imu on a different i2c bus
-    i2c = I2CBus(4)
-    sensor = BNO055_I2C(i2c, address=0x28)
     return {
         "orientation":         {"x": sensor.quaternion[1],    "y": sensor.quaternion[2],    "z": sensor.quaternion[3],    "w": sensor.quaternion[0]},
         "angular_velocity":    {"x": sensor.gyro[0],          "y": sensor.gyro[1],          "z": sensor.gyro[2]},
@@ -92,27 +95,22 @@ def get_gps_data():
     return {"latitude": None, "longitude": None, "altitude": None}
 
 
-
 # MQTT CALLBACKS
-# [UNCOMMENT FOR PRODUCTION]
-# def on_connect(client, userdata, flags, rc):
-#     print(f"[MQTT] CONNACK rc={rc}")
-#
-# def on_publish(client, userdata, mid):
-#     print(f"[MQTT] PUBACK received for PacketId={mid}")
-#
-# def on_disconnect(client, userdata, rc):
-#     if rc != 0:
-#         print(f"[MQTT] Unexpected disconnect (rc={rc}). Will auto-reconnect.")
+def on_connect(client, userdata, flags, rc):
+    print(f"[MQTT] CONNACK rc={rc}")
+
+def on_publish(client, userdata, mid):
+    print(f"[MQTT] PUBACK received for PacketId={mid}")
+
+def on_disconnect(client, userdata, rc):
+    if rc != 0:
+        print(f"[MQTT] Unexpected disconnect (rc={rc}). Will auto-reconnect.")
 
 
 # [REMOVE FOR PRODUCTION] - Standalone test loop.
 # In production this is replaced by CollectorNode (ROS2 timer).
-
 def run_test_loop():
-    # Initialize IMU once - avoids re-initializing hardware every poll cycle
-    # change made to accomodate imu on a different i2c bus 
-    i2c = I2CBus(4)
+    i2c = I2CBus(4)  # BNO055 on i2c-4
     sensor = BNO055_I2C(i2c, address=0x28)
 
     while True:
@@ -143,7 +141,6 @@ def run_test_loop():
         print("================================\n")
 
         time.sleep(INTERVAL)
-
 
 
 # COLLECTOR NODE
