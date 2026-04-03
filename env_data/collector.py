@@ -105,18 +105,18 @@ def run_test_loop():
         }
 
         # What would be sent to the ML MQTT topic
-        print("\n========== ML TOPIC ==========")
+        print("\n ML TOPIC ")
         print(f"  timestamp:   {timestamp}")
         print(f"  environment: {env_data}")
         print(f"  light:       {light_data}")
 
         # What would be sent to the ESRI MQTT topic
-        print("\n========== ESRI TOPIC ==========")
+        print("\n ESRI TOPIC ")
         print(f"  timestamp: {timestamp}")
         print(f"  thermal:   {thermal_data}")
         print(f"  gps:       {gps_data}")
         print(f"  imu:       {imu_data}")
-        print("================================\n")
+        print("\n")
 
         time.sleep(INTERVAL)
 
