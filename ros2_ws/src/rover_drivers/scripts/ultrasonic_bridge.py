@@ -56,9 +56,18 @@ class UltrasonicBridge(Node):
         if not line: # if we didn't get any data, just return and wait for the next timer callback
             return
     
+        # try:
+        #     distance = float(line) # try to convert the line of data to a float representing the distance in meters
+        # except ValueError:
+        #     self.get_logger().warn(f"Could not parse line: {line}")
+        #     return
+
         try:
-            distance = float(line) # try to convert the line of data to a float representing the distance in meters
-        except ValueError:
+            # parse "Sensor1: 231 cm | Sensor2: 0 cm"
+            sensor1_part = line.split('|')[0]  # "Sensor1: 231 cm"
+            distance_cm = float(sensor1_part.split(':')[1].replace('cm', '').strip())
+            distance = distance_cm / 100.0  # convert to meters
+        except (ValueError, IndexError):
             self.get_logger().warn(f"Could not parse line: {line}")
             return
         
