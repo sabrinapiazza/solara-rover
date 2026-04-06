@@ -2,3 +2,40 @@
 # Planner and controller settings
 # Recovery behavior parameters
 # Tuned for your specific rover dimensions and capabilities
+
+
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      update_frequency: 5.0
+      publish_frequency: 2.0
+      global_frame: odom
+      robot_base_frame: base_link
+      use_sim_time: false
+      rolling_window: true
+      width: 3
+      height: 3
+      resolution: 0.05
+      robot_radius: 0.4
+      plugins: ["range_sensor_layer", "inflation_layer"]
+      range_sensor_layer:
+        plugin: "nav2_costmap_2d::RangeSensorLayer"
+        enabled: true
+        topics: ["/ultrasonic/fix"]
+        phi: 1.2
+        inflate_cone: 1.0
+        no_readings_timeout: 0.0
+        clear_threshold: 0.2
+        mark_threshold: 0.8
+        clear_on_max_reading: true
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        cost_scaling_factor: 3.0
+        inflation_radius: 0.3
+
+lifecycle_manager:
+  ros__parameters:
+    use_sim_time: false
+    autostart: true
+    bond_timeout: 10.0
+    node_names: ["local_costmap"]
