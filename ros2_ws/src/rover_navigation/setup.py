@@ -16,7 +16,7 @@ setup(
             glob('launch/*.py')),
         (os.path.join('share', package_name, 'config'), 
             glob('config/*.yaml')),
-        (os.path.join('share', package_name, 'maps'),   # add this
+        (os.path.join('share', package_name, 'maps'),  
         glob('maps/*')),
     ],
     install_requires=['setuptools'],

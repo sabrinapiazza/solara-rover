@@ -37,5 +37,5 @@ lifecycle_manager:
   ros__parameters:
     use_sim_time: false
     autostart: true
-    bond_timeout: 10.0
+    bond_timeout: 30.0
     node_names: ["local_costmap"]
