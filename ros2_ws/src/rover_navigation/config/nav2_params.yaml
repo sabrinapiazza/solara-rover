@@ -38,4 +38,4 @@ lifecycle_manager:
     use_sim_time: false
     autostart: true
     bond_timeout: 30.0
-    node_names: ["local_costmap"]
+    node_names: ["map_server","local_costmap"]

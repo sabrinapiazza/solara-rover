@@ -30,24 +30,24 @@ def generate_launch_description():
         output='screen'
     )
 
-    # lifecycle_manager = Node(
-    #     package='nav2_lifecycle_manager',
-    #     executable='lifecycle_manager',
-    #     name='lifecycle_manager',
-    #     parameters=[params],
-    #     output='screen'
-    # )
-
     lifecycle_manager = Node(
         package='nav2_lifecycle_manager',
         executable='lifecycle_manager',
         name='lifecycle_manager',
-        parameters=[{
-            'autostart': True,
-            'node_names': ['map_server', 'local_costmap'],  # map_server must come first
-        }],
+        parameters=[params],
         output='screen'
     )
+
+    # lifecycle_manager = Node(
+    #     package='nav2_lifecycle_manager',
+    #     executable='lifecycle_manager',
+    #     name='lifecycle_manager',
+    #     parameters=[{
+    #         'autostart': True,
+    #         'node_names': ['map_server', 'local_costmap'],  # map_server must come first
+    #     }],
+    #     output='screen'
+    # )
 
     map_to_odom = Node(
         package='tf2_ros',
