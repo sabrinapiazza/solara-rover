@@ -9,6 +9,19 @@ def generate_launch_description():
         'config', 'nav2_params.yaml'
     )
 
+    map_yaml = os.path.join(
+        get_package_share_directory('rover_navigation'),
+        'maps', 'rgarden_map.yaml'  # adjust to your actual map filename
+    )
+
+    map_server = Node(
+        package='nav2_map_server',
+        executable='map_server',
+        name='map_server',
+        output='screen',
+        parameters=[{'yaml_filename': map_yaml, 'use_sim_time': False}]
+    )
+
     costmap = Node(
         package='nav2_costmap_2d',
         executable='nav2_costmap_2d',
@@ -17,11 +30,22 @@ def generate_launch_description():
         output='screen'
     )
 
+    # lifecycle_manager = Node(
+    #     package='nav2_lifecycle_manager',
+    #     executable='lifecycle_manager',
+    #     name='lifecycle_manager',
+    #     parameters=[params],
+    #     output='screen'
+    # )
+
     lifecycle_manager = Node(
         package='nav2_lifecycle_manager',
         executable='lifecycle_manager',
         name='lifecycle_manager',
-        parameters=[params],
+        parameters=[{
+            'autostart': True,
+            'node_names': ['map_server', 'local_costmap'],  # map_server must come first
+        }],
         output='screen'
     )
 
@@ -46,4 +70,4 @@ def generate_launch_description():
         # adjust x, z offset to where the sensor actually sits on the chassis
     )
 
-    return LaunchDescription([map_to_odom, odom_to_base, base_to_ultrasonic, costmap, lifecycle_manager])
+    return LaunchDescription([map_to_odom, odom_to_base, base_to_ultrasonic, map_server, costmap, lifecycle_manager])
