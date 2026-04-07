@@ -20,7 +20,7 @@ def generate_launch_description():
         actions=[
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
-                    os.path.join(rover_navigation, 'launch', 'nav+ult.launch.py')
+                    os.path.join(rover_navigation, 'launch', 'navigation.launch.py')
                 )
             )
         ]
