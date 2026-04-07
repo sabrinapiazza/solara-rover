@@ -25,6 +25,12 @@ def generate_launch_description():
         output='screen'
     )
 
+    map_to_odom = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='map_to_odom',
+        arguments=['0', '0', '0', '0', '0', '0', 'map', 'odom'] 
+    )
     odom_to_base = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
@@ -40,4 +46,4 @@ def generate_launch_description():
         # adjust x, z offset to where the sensor actually sits on the chassis
     )
 
-    return LaunchDescription([odom_to_base, base_to_ultrasonic, costmap, lifecycle_manager])
+    return LaunchDescription([map_to_odom, odom_to_base, base_to_ultrasonic, costmap, lifecycle_manager])
