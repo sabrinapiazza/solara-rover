@@ -6,7 +6,7 @@ import os
 def generate_launch_description():
     params = os.path.join(
         get_package_share_directory('rover_navigation'),
-        'config', 'costmap_test.yaml'
+        'config', 'nav2_params.yaml'
     )
 
     costmap = Node(
@@ -25,12 +25,12 @@ def generate_launch_description():
         output='screen'
     )
 
-    # odom_to_base = Node(
-    #     package='tf2_ros',
-    #     executable='static_transform_publisher',
-    #     name='odom_to_base_link',
-    #     arguments=['0', '0', '0', '0', '0', '0', 'odom', 'base_link']
-    # )
+    odom_to_base = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='odom_to_base_link',
+        arguments=['0', '0', '0', '0', '0', '0', 'odom', 'base_link']
+    )
 
     base_to_ultrasonic = Node(
         package='tf2_ros',
