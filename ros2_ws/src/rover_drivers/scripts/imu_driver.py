@@ -10,13 +10,11 @@ from rclpy.node import Node
 from sensor_msgs.msg import Imu  # standard ROS2 IMU message type
 from std_msgs.msg import String  # used for human-readable calibration status
 
-import board                     # CircuitPython board abstraction for I2C pins
 import adafruit_bno055           # Adafruit CircuitPython driver for BNO055
+import smbus2
 import time
 import json
 import os
-import busio
-import digitalio
 
 # Path to calibration file stored in the repo's calibration/ folder.
 # __file__ is this script, ../../../../ walks up to the project root.
@@ -33,8 +31,45 @@ CALIBRATION_FILE = os.path.join(os.path.dirname(__file__), '../../../../calibrat
 # Check bus exists: ls /dev/i2c* --> /dev/i2c-1
 # i2cdetect -y 1 --> 0x29 or 0x28
 
-CALIBRATION_SAVE_INTERVAL = 300  # Save offsets every 5 minutes during operation
-# CALIBRATION_SAVE_INTERVAL = 3   # 3 secs for testing
+# CALIBRATION_SAVE_INTERVAL = 300  # Save offsets every 5 minutes during operation
+CALIBRATION_SAVE_INTERVAL = 3   # 3 secs for testing
+
+class I2CBus:
+    def __init__(self, bus_num):
+        self._bus = smbus2.SMBus(bus_num)
+
+    def try_lock(self): return True
+    def unlock(self): pass
+    def scan(self): return []
+
+    def writeto(self, addr, buf, **kwargs):
+        if len(buf) == 0:
+            try:
+                self._bus.read_byte(addr)
+            except:
+                pass
+        else:
+            self._bus.write_i2c_block_data(addr, buf[0], list(buf[1:]))
+
+    def readfrom_into(self, addr, buf, **kwargs):
+        for i in range(len(buf)):
+            buf[i] = self._bus.read_byte(addr)
+
+    def writeto_then_readfrom(self, addr, out, buf,
+                              out_start=0, out_end=None,
+                              in_start=0, in_end=None, **kwargs):
+        out_end  = out_end or len(out)
+        in_end   = in_end  or len(buf)
+        read_len = in_end - in_start
+        reg = out[out_start]
+        for i in range(read_len):
+            for attempt in range(5):  # retry up to 5 times
+                try:
+                    buf[in_start + i] = self._bus.read_byte_data(addr, reg + i)
+                    break
+                except OSError:
+                    time.sleep(0.01)  # wait 10ms and retry
+
 
 class IMUDriver(Node):
     def __init__(self):
@@ -48,12 +83,11 @@ class IMUDriver(Node):
         # Initialize I2C bus and BNO055 sensor.
         # Fatal error if sensor not found - no point running without hardware.
         try:
-            # these two lines below are specifying to work on a different i2c bus
-            i2c = busio.I2C(scl=board.D24, sda=board.D23)
-            self.sensor = adafruit_bno055.BNO055_I2C(i2c)
-
-            self.sensor = adafruit_bno055.BNO055_I2C(i2c)
-            self.get_logger().info('BNO055 connected via I2C')
+            # Use smbus2-backed I2CBus on bus 4 (non-default hardware bus).
+            # Address 0x28 is the BNO055 default when ADR pin is low.
+            i2c = I2CBus(4)
+            self.sensor = adafruit_bno055.BNO055_I2C(i2c, address=0x28)
+            self.get_logger().info('BNO055 connected via I2C (bus 4, addr 0x28)')
         except Exception as e:
             self.get_logger().fatal(f'Failed to connect to BNO055: {e}')
             raise
@@ -71,10 +105,9 @@ class IMUDriver(Node):
         self.create_timer(0.02, self._publish)
 
     # CALIBRATION 
-    # The BNO055 runs its own internal sensor fusion (NDOF mode) but needs
-    # calibration offsets to correct for hardware imperfections and local
-    # magnetic environment. Per the article these must be loaded in CONFIG
-    # mode before switching back to NDOF - skipping this causes a load error.
+    # The BNO055 runs its own internal sensor fusion (NDOF mode) but needs calibration offsets to 
+    # correct for hardware imperfections and local magnetic environment. Per the article these must be 
+    # loaded in CONFIG mode before switching back to NDOF - skipping this causes a load error.
     # https://robofoundry.medium.com/lessons-learned-while-working-with-imu-sensor-ros2-and-raspberry-pi-a4fec18a7c7
 
     def _load_calibration(self):
@@ -91,10 +124,9 @@ class IMUDriver(Node):
             with open(CALIBRATION_FILE, 'r') as f:
                 offsets = json.load(f)
 
-            # Switch to CONFIG mode - required to write offsets to the sensor.
-            # Writing in NDOF (operational) mode will throw an error.
+            # Switch to CONFIG mode - required to write offsets to the sensor. Writing in NDOF (operational) mode will throw an error.
             self.sensor.mode = adafruit_bno055.CONFIG_MODE
-            time.sleep(0.025)  # short delay for mode switch to settle
+            time.sleep(0.025)     # short delay for mode switch to settle
 
             self.sensor.offsets_accelerometer = tuple(offsets['accel'])
             self.sensor.offsets_gyroscope     = tuple(offsets['gyro'])
@@ -112,8 +144,7 @@ class IMUDriver(Node):
     def _save_calibration(self):
         """
         Save current calibration offsets to JSON.
-        Called when sys+accel reach 3, every 5 minutes during operation,
-        and on node shutdown - so offsets gradually improve each session.
+        Called when sys+accel reach 3, every 5 minutes during operation, and on node shutdown - so offsets gradually improve each session.
         """
         try:
             os.makedirs(os.path.dirname(CALIBRATION_FILE), exist_ok=True)
@@ -125,8 +156,8 @@ class IMUDriver(Node):
             with open(CALIBRATION_FILE, 'w') as f:
                 json.dump(offsets, f)
             self.get_logger().info(f'Calibration saved to {CALIBRATION_FILE}')
-            self._calibrated = True  # stop re-saving on subsequent loops
-            self._last_save = time.time()  # reset periodic save timer
+            self._calibrated = True     # stop re-saving on subsequent loops
+            self._last_save = time.time()     # reset periodic save timer
         except Exception as e:
             self.get_logger().error(f'Failed to save calibration: {e}')
 
@@ -145,9 +176,9 @@ class IMUDriver(Node):
         Read sensor and publish IMU data at 50Hz.
         """
         try:
-            quat  = self.sensor.quaternion      # orientation as (w, x, y, z)
-            gyro  = self.sensor.gyro            # angular velocity in rad/s
-            accel = self.sensor.acceleration    # linear acceleration in m/s²
+            quat  = self.sensor.quaternion          # orientation as (w, x, y, z)
+            gyro  = self.sensor.gyro                # angular velocity in rad/s
+            accel = self.sensor.acceleration        # linear acceleration in m/s²
             cal   = self.sensor.calibration_status  # tuple: (sys, gyro, accel, mag) each 0-3
         except Exception as e:
             self.get_logger().error(f'Sensor read error: {e}')
@@ -165,14 +196,12 @@ class IMUDriver(Node):
             self.get_logger().info('sys+accel fully calibrated - saving offsets')
             self._save_calibration()
 
-        # Option 2: Save periodically every 5 minutes regardless of calibration
-        # level, so offsets gradually improve over time across sessions.
+        # Option 2: Save periodically every 5 minutes regardless of calibration level, so offsets gradually improve over time across sessions.
         if time.time() - self._last_save > CALIBRATION_SAVE_INTERVAL:
             self.get_logger().info('Periodic calibration save')
             self._save_calibration()
 
-        # Sensor returns None on individual fields during warmup before
-        # it has enough data for a valid reading - skip publishing until ready
+        # Sensor returns None on individual fields during warmup before it has enough data for a valid reading - skip publishing until ready
         if None in (quat, gyro, accel):
             self.get_logger().warn('Sensor not ready yet - waiting for calibration')
             return
@@ -182,7 +211,7 @@ class IMUDriver(Node):
         msg.header.frame_id = 'imu_link'  # must match URDF link name in rover_description
 
         # BNO055 quaternion order is (w, x, y, z)
-        # ROS2 sensor_msgs/Imu expects (x, y, z, w) — remap here
+        # ROS2 sensor_msgs/Imu expects (x, y, z, w) - remap here
         msg.orientation.w = quat[0]
         msg.orientation.x = quat[1]
         msg.orientation.y = quat[2]
@@ -197,11 +226,10 @@ class IMUDriver(Node):
         msg.linear_acceleration.z = accel[2]
 
         # Setting covariance[0] to -1 tells downstream nodes (nav2, EKF) that covariance is unknown. 
-        # Setting to 0 - that means "perfect certainty" and will break sensor fusion.
+        # Setting to 0 which means "perfect certainty" and will break sensor fusion.
         # msg.orientation_covariance[0]         = -1.0
         # msg.angular_velocity_covariance[0]    = -1.0
         # msg.linear_acceleration_covariance[0] = -1.0
-
 
         # Diagonal covariance matrices - values represent sensor noise variance
         # BNO055 typical values
@@ -222,6 +250,13 @@ class IMUDriver(Node):
         ]
 
         self.imu_pub.publish(msg)
+        
+        # for testing purposes 
+        print(f"  orientation:   {{'x': {msg.orientation.x:.4f}, 'y': {msg.orientation.y:.4f}, 'z': {msg.orientation.z:.4f}, 'w': {msg.orientation.w:.4f}}}")
+        print(f"  angular_vel:   {{'x': {msg.angular_velocity.x:.4f}, 'y': {msg.angular_velocity.y:.4f}, 'z': {msg.angular_velocity.z:.4f}}}")
+        print(f"  linear_accel:  {{'x': {msg.linear_acceleration.x:.4f}, 'y': {msg.linear_acceleration.y:.4f}, 'z': {msg.linear_acceleration.z:.4f}}}")
+        print(f"  cal:           sys:{cal[0]} gyro:{cal[1]} accel:{cal[2]} mag:{cal[3]}")
+        print()
 
 
 def main(args=None):
