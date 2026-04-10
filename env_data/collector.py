@@ -39,42 +39,42 @@ class CollectorNode(Node):
         self.mqtt_client = mqtt_client
 
         # Cache for latest GPS fix - None until first message arrives
-        self.latest_gps = None
+        # self.latest_gps = None
 
         # Cache for latest IMU data - None until first message arrives
         self.latest_imu = None
 
         # Subscribe to GPS topic published by gps_driver.py
-        self.gps_sub = self.create_subscription(
-            NavSatFix,
-            "/gps/fix",
-            self.gps_callback,
-            10
-        )
+        # self.gps_sub = self.create_subscription(
+        #     NavSatFix,
+        #     "/gps/fix",
+        #     self.gps_callback,
+        #     10
+        # )
 
         # Timer replaces time.sleep() - fires collect_and_publish() every INTERVAL seconds
         self.timer = self.create_timer(INTERVAL, self.collect_and_publish)
 
         self.get_logger().info(f"Collector started, publishing every {INTERVAL}s")
 
-    def gps_callback(self, msg: NavSatFix):
-        self.latest_gps = {
-            "latitude":  msg.latitude,
-            "longitude": msg.longitude,
-            "altitude":  msg.altitude,
-        }
+    # def gps_callback(self, msg: NavSatFix):
+    #     self.latest_gps = {
+    #         "latitude":  msg.latitude,
+    #         "longitude": msg.longitude,
+    #         "altitude":  msg.altitude,
+    #     }
 
     def collect_and_publish(self):
         timestamp = datetime.now(pytz.timezone('America/Los_Angeles')).strftime("%Y-%m-%dT%H:%M:%S PST")
         env_data     = environment.get_data()
-        light_data   = light.get_data()
-        thermal_data = thermal.get_data()
+        # light_data   = light.get_data()
+        # thermal_data = thermal.get_data()
 
-        gps_data = self.latest_gps if self.latest_gps is not None else {
-            "latitude":  None,
-            "longitude": None,
-            "altitude":  None,
-        }
+        # gps_data = self.latest_gps if self.latest_gps is not None else {
+        #     "latitude":  None,
+        #     "longitude": None,
+        #     "altitude":  None,
+        # }
 
         # ML topic: environment + light
         self.mqtt_client.publish(
@@ -82,23 +82,23 @@ class CollectorNode(Node):
             json.dumps({
                 "timestamp":   timestamp,
                 "environment": env_data,
-                "light":       light_data,
+                # "light":       light_data,
             }),
             qos=QoS
         )
 
         # ESRI topic: thermal + gps + imu
-        self.mqtt_client.publish(
-            topics["ESRI"],
-            json.dumps({
-                "timestamp": timestamp,
-                "thermal":   thermal_data,
-                "gps":       gps_data,
-            }),
-            qos=QoS
-        )
+        # self.mqtt_client.publish(
+        #     topics["ESRI"],
+        #     json.dumps({
+        #         "timestamp": timestamp,
+        #         "thermal":   thermal_data,
+        #         "gps":       gps_data,
+        #     }),
+        #     qos=QoS
+        # )
 
-        self.get_logger().info(f"Published at {timestamp}. GPS: {gps_data}")
+        # self.get_logger().info(f"Published at {timestamp}. GPS: {gps_data}")
 
 
 # MAIN
