@@ -67,8 +67,8 @@ class CollectorNode(Node):
     def collect_and_publish(self):
         timestamp = datetime.now(pytz.timezone('America/Los_Angeles')).strftime("%Y-%m-%dT%H:%M:%S PST")
         env_data     = environment.get_data()
-        # light_data   = light.get_data()
-        # thermal_data = thermal.get_data()
+        light_data   = light.get_data()
+        thermal_data = thermal.get_data()
 
         # gps_data = self.latest_gps if self.latest_gps is not None else {
         #     "latitude":  None,
@@ -82,21 +82,21 @@ class CollectorNode(Node):
             json.dumps({
                 "timestamp":   timestamp,
                 "environment": env_data,
-                # "light":       light_data,
+                "light":       light_data,
             }),
             qos=QoS
         )
 
         # ESRI topic: thermal + gps + imu
-        # self.mqtt_client.publish(
-        #     topics["ESRI"],
-        #     json.dumps({
-        #         "timestamp": timestamp,
-        #         "thermal":   thermal_data,
-        #         "gps":       gps_data,
-        #     }),
-        #     qos=QoS
-        # )
+        self.mqtt_client.publish(
+            topics["ESRI"],
+            json.dumps({
+                "timestamp": timestamp,
+                "thermal":   thermal_data,
+                # "gps":       gps_data,
+            }),
+            qos=QoS
+        )
 
         # self.get_logger().info(f"Published at {timestamp}. GPS: {gps_data}")
 
