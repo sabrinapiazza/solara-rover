@@ -1,2 +1,40 @@
-#get specs from robotics team 
-#accurate measurements of solara chassis & arm
+<?xml version="1.0"?>
+<robot name="solara_rover" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:property name="front_wheel_x" value="0.2286"/>
+  <xacro:property name="rear_wheel_x" value="-0.2286"/>
+
+  <xacro:include filename="$(find rover_description)/urdf/chassis.xacro"/>
+  <xacro:include filename="$(find rover_description)/urdf/wheels.xacro"/>
+  <xacro:include filename="$(find rover_description)/urdf/sensors/imu.xacro"/>
+  <xacro:include filename="$(find rover_description)/urdf/sensors/ultrasonic.xacro"/>
+  <xacro:include filename="$(find rover_description)/urdf/sensors/lidar.xacro"/>
+  <xacro:include filename="$(find rover_description)/urdf/sensors/gps.xacro"/>
+
+  <!-- Wheels -->
+  <xacro:driven_wheel prefix="middle_left" reflect_y="1"/>
+  <xacro:driven_wheel prefix="middle_right" reflect_y="-1"/>
+
+  <xacro:passive_wheel prefix="front_left" reflect_y="1" x_position="${front_wheel_x}"/>
+  <xacro:passive_wheel prefix="front_right" reflect_y="-1" x_position="${front_wheel_x}"/>
+  <xacro:passive_wheel prefix="rear_left" reflect_y="1" x_position="${rear_wheel_x}"/>
+  <xacro:passive_wheel prefix="rear_right" reflect_y="-1" x_position="${rear_wheel_x}"/>
+
+  <!-- Sensors (frames only) -->
+  <xacro:imu_sensor parent_link="chassis_link">
+    <origin xyz="0.3048 0 0.0862" rpy="0 0 0"/>
+  </xacro:imu_sensor>
+
+  <xacro:ultrasonic_sensor parent_link="chassis_link">
+    <origin xyz="0.3148 0 0.0762" rpy="0 0 0"/>
+  </xacro:ultrasonic_sensor>
+
+  <xacro:gps_sensor parent_link="chassis_link">
+    <origin xyz="0.2 0.1 0.0862" rpy="0 0 0"/>
+  </xacro:gps_sensor>
+
+  <xacro:lidar_sensor parent_link="chassis_link">
+    <origin xyz="0.2 0 0.1" rpy="0 0 0"/>
+  </xacro:lidar_sensor>
+
+</robot>

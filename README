@@ -12,7 +12,7 @@ ROS2 Jazzy-based autonomous rover for R'Garden Community Garden at UCR.
 - **Motor Control**: Raspberry Pi Pico
 - **Navigation Sensors**: RPLIDAR A1, BNO055 IMU, NEO-M8N GPS
 - **Obstacle Detection**: 4x HC-SR04 Ultrasonic
-- **Environmental Sensors**: BME680, TSL2591, Soil moisture, MLX90640 thermal
+- **Environmental Sensors**: BME280, TSL2591, Soil moisture, MLX90640 thermal
 
 ### Software Architecture
 - **ROS2 Jazzy**: Navigation, SLAM, sensor fusion

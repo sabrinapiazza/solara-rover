@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 import os
 from glob import glob
 
@@ -7,13 +7,16 @@ package_name = 'rover_drivers'
 setup(
     name=package_name,
     version='0.1.0',
-    packages=[package_name],
+    # packages=[package_name],
+    packages=find_packages(),
     data_files=[
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name, 'launch'), 
             glob('launch/*.py')),
+        (os.path.join('share', package_name, 'config'), 
+            glob('config/*.yaml')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -24,9 +27,11 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'gps_driver = rover_drivers.gps_driver:main',
-            'imu_driver = rover_drivers.imu_driver:main',
-            'motor_bridge = rover_drivers.motor_bridge:main',
+            # 'gps_driver = rover_drivers.scripts.gps_driver:main',
+            # 'imu_driver = rover_drivers.scripts.imu_driver:main',
+            # 'motor_bridge = rover_drivers.scripts.motor_bridge:main',
+            'gps_driver = scripts.gps_driver:main',
+            'imu_driver = scripts.imu_driver:main',
         ],
     },
 )
