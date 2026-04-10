@@ -202,7 +202,8 @@ class IMUDriver(Node):
             self._save_calibration()
 
         # Sensor returns None on individual fields during warmup before it has enough data for a valid reading - skip publishing until ready
-        if None in (quat, gyro, accel):
+        # check if any individual field is None
+        if (None in quat or None in gyro or None in accel):
             self.get_logger().warn('Sensor not ready yet - waiting for calibration')
             return
 
@@ -212,18 +213,18 @@ class IMUDriver(Node):
 
         # BNO055 quaternion order is (w, x, y, z)
         # ROS2 sensor_msgs/Imu expects (x, y, z, w) - remap here
-        msg.orientation.w = quat[0]
-        msg.orientation.x = quat[1]
-        msg.orientation.y = quat[2]
-        msg.orientation.z = quat[3]
+        msg.orientation.w = float(quat[0])
+        msg.orientation.x = float(quat[1])
+        msg.orientation.y = float(quat[2])
+        msg.orientation.z = float(quat[3])
 
-        msg.angular_velocity.x = gyro[0]
-        msg.angular_velocity.y = gyro[1]
-        msg.angular_velocity.z = gyro[2]
+        msg.angular_velocity.x = float(gyro[0])
+        msg.angular_velocity.y = float(gyro[1])
+        msg.angular_velocity.z = float(gyro[2])
 
-        msg.linear_acceleration.x = accel[0]
-        msg.linear_acceleration.y = accel[1]
-        msg.linear_acceleration.z = accel[2]
+        msg.linear_acceleration.x = float(accel[0])
+        msg.linear_acceleration.y = float(accel[1])
+        msg.linear_acceleration.z = float(accel[2])
 
         # Setting covariance[0] to -1 tells downstream nodes (nav2, EKF) that covariance is unknown. 
         # Setting to 0 which means "perfect certainty" and will break sensor fusion.
