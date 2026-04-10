@@ -257,6 +257,8 @@ class IMUDriver(Node):
         print(f"  linear_accel:  {{'x': {msg.linear_acceleration.x:.4f}, 'y': {msg.linear_acceleration.y:.4f}, 'z': {msg.linear_acceleration.z:.4f}}}")
         print(f"  cal:           sys:{cal[0]} gyro:{cal[1]} accel:{cal[2]} mag:{cal[3]}")
         print()
+        time.sleep(5)
+
 
 
 def main(args=None):
