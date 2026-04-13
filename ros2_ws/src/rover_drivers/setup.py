@@ -29,8 +29,7 @@ setup(
         'console_scripts': [
             # 'gps_driver = rover_drivers.scripts.gps_driver:main',
             # 'imu_driver = rover_drivers.scripts.imu_driver:main',
-            'motor_bridge = rover_drivers.scripts.motor_bridge:main',
-            'gps_driver = scripts.gps_driver:main',
+            'motor_bridge = scripts.motor_bridge:main',            'gps_driver = scripts.gps_driver:main',
             'imu_driver = scripts.imu_driver:main',
         ],
     },
