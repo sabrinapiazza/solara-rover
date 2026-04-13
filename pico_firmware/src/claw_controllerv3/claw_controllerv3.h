@@ -13,6 +13,6 @@ typedef struct{
 
 void setServo(PWM *pin,float degree);
 PWM enableServo(int pin);
-void disableServo(PWM myServo);
+void disableServos(PWM *base, PWM *joint1, PWM *joint2, PWM *gripper);
 int calculateDelay(PWM myServo,int mSecPerDegree);
 void moveDelay(int myDelay,float startDeg,float endDeg);

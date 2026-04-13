@@ -43,10 +43,17 @@ pico_set_program_version(claw_controllerv3 "0.1")
 add_executable(claw_dc claw_dc.cpp) #SABRINA ADDED 
 pico_add_extra_outputs(claw_dc) #SABRINA ADDED
 
+add_executable(drill drill.cpp) #SABRINA ADDED 
+pico_add_extra_outputs(drill) #SABRINA ADDED
+
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(claw_controllerv3 0)
-pico_enable_stdio_usb(claw_controllerv3 0)
+pico_enable_stdio_usb(claw_controllerv3 1)
 pico_enable_stdio_usb(claw_dc 1)
+pico_enable_stdio_uart(claw_dc 0) #SABRINA ADDED
+pico_enable_stdio_usb(drill 1)
+pico_enable_stdio_uart(drill 0) #SABRINA ADDED
+
 
 # Add the standard library to the build
 target_link_libraries(claw_controllerv3
@@ -63,6 +70,7 @@ target_include_directories(claw_controllerv3 PRIVATE
 target_link_libraries(claw_controllerv3 
             hardware_pwm
             hardware_clocks
+            pico_cyw43_arch_none
         
         )
 
