@@ -1,28 +1,54 @@
-// Main program loop
-// Initializes all subsystems
-// Reads serial commands from Pi 5
-// Calls motor/encoder/ultrasonic/claw functions
-// Sends sensor data back to Pi 5 over serial
+#include "pico/stdlib.h"
+#include "pico/cyw43_arch.h"
+#include "motor_driver.h"
+#include "encoder.h"
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
 
-//RECIEVING DATA 
-// only file that interacts with ros2 topics
-// recieves converted cmd velocity from motor bridge
-// call motor driver 
+#define SERIAL_TIMEOUT_MS 100
 
-// Nav2 publishes /cmd_vel (ROS2 topic)
-// motor_bridge.py subscribes to /cmd_vel
-// motor_bridge converts to serial command: "CMD,0.5,0.2\n"
-// Sends over USB serial to Pico
-// main.cpp reads serial, parses command
-// Calls motor_driver.setSpeed(left, right)
-// Motors move
+int main() {
+    cyw43_arch_init();
+    stdio_init_all();
+    sleep_ms(2000);
 
-//SENDING DATA
+    motor_init();
+    encoder_init();
 
-// encoder.cpp counts wheel ticks
-// main.cpp formats: "ODOM,1234,5678\n"
-// Sends over serial to Pi
-// motor_bridge.py receives, parses
-// Publishes to /odom (ROS2 topic)
+    char buf[64];
+    int buf_idx = 0;
 
+    while (true) {
+        int c = getchar_timeout_us(SERIAL_TIMEOUT_MS * 1000);
 
+        if (c != PICO_ERROR_TIMEOUT) {
+            if (c == '\n') {
+                buf[buf_idx] = '\0';
+                buf_idx = 0;
+
+                if (strncmp(buf, "CMD:", 4) == 0) {
+                    char *data = buf + 4;
+                    char *comma = strchr(data, ',');
+                    if (comma != NULL) {
+                        *comma = '\0';
+                        int left_pwm = atoi(data);
+                        int right_pwm = atoi(comma + 1);
+                        motor_set(left_pwm, right_pwm);
+                    }
+                }
+            } else {
+                if (buf_idx < 63) {
+                    buf[buf_idx++] = (char)c;
+                }
+            }
+        }
+
+        static uint32_t last_enc_send = 0;
+        uint32_t now = to_ms_since_boot(get_absolute_time());
+        if (now - last_enc_send >= 50) {
+            last_enc_send = now;
+            printf("ENC:%ld,%ld\n", get_left_ticks(), get_right_ticks());
+        }
+    }
+}
