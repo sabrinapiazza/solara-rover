@@ -1,0 +1,3 @@
+[submodule "pico_firmware/claw_controllerv3/lib/pico-sdk"]
+	path = pico_firmware/claw_controllerv3/lib/pico-sdk
+	url = https://github.com/raspberrypi/pico-sdk
