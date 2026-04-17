@@ -2,3 +2,11 @@
 # Planner and controller settings
 # Recovery behavior parameters
 # Tuned for your specific rover dimensions and capabilities
+
+
+lifecycle_manager:
+  ros__parameters:
+    use_sim_time: false
+    autostart: true
+    bond_timeout: 30.0
+    node_names: ["map_server"] #<---- inlucde the rest of ur node names here 
