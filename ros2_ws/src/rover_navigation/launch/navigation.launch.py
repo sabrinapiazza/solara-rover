@@ -26,6 +26,12 @@ def generate_launch_description():
                 'serial_baudrate': 115200,  # try 256000 if this doesn't work
             }]
     )
+    base2lidar = Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            name='base_to_laser_tf',
+            arguments=['0', '0', '0', '0', '0', '0', 'base_link', 'laser']
+        )
 
     map_server = Node(
         package='nav2_map_server',
@@ -45,4 +51,4 @@ def generate_launch_description():
         output='screen'
     )
 
-    return LaunchDescription([ map_server, lifecycle_manager, lidar])
+    return LaunchDescription([ map_server, lifecycle_manager, lidar, base2lidar])
