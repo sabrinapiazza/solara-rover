@@ -33,3 +33,4 @@ rover_navigation/maps/*.pgm
 # virtual environment
 .venv/
 mqtt-publisher/
+pico_firmware/src/claw_controllerv3/lib/
