@@ -11,7 +11,20 @@ def generate_launch_description():
 
     map_yaml = os.path.join(
         get_package_share_directory('rover_navigation'),
-        'maps', 'rgarden_map.yaml'  # adjust to your actual map filename
+        'map', 'rgarden_map.yaml'  # adjust to your actual map filename
+    )
+
+    lidar = Node(
+            package='rplidar_ros',
+            executable='rplidar_composition',
+            name='rplidar_node',
+            output='screen',
+            parameters=[{
+                'frame_id': 'laser',
+                'angle_compensate': True,
+                'serial_port': '/dev/ttyUSB0',
+                'serial_baudrate': 115200,  # try 256000 if this doesn't work
+            }]
     )
 
     map_server = Node(
@@ -32,4 +45,4 @@ def generate_launch_description():
         output='screen'
     )
 
-    return LaunchDescription([ map_server, lifecycle_manager])
+    return LaunchDescription([ map_server, lifecycle_manager, lidar])
