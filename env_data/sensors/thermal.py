@@ -7,12 +7,12 @@ import board
 import busio
 import adafruit_mlx90640
 
+i2c = busio.I2C(board.SCL, board.SDA, frequency=50000)
+mlx = adafruit_mlx90640.MLX90640(i2c)
+mlx.refresh_rate = adafruit_mlx90640.RefreshRate.REFRESH_2_HZ
+    
 def get_data():
     # Single read of MLX90640 frame. Returns min/max/avg stats as a dict for collector.py.
-    i2c = busio.I2C(board.SCL, board.SDA, frequency=4e5)
-    mlx = adafruit_mlx90640.MLX90640(i2c)
-    mlx.refresh_rate = adafruit_mlx90640.RefreshRate.REFRESH_2_HZ
-
     frame = [0] * 768  # 32x24 = 768 pixels
     mlx.getFrame(frame)
 
