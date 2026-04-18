@@ -17,7 +17,7 @@ def generate_launch_description():
 
     return LaunchDescription([
         Node(
-            package='motor_bridge',
+            package='rover_drivers',
             executable='motor_bridge',
             name='motor_bridge',
             output='screen'
