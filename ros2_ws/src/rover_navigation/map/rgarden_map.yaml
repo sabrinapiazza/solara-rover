@@ -1,4 +1,4 @@
-image: rgarden_map.pgm
+image: /home/solara/solara-rover/ros2_ws/install/share/rover_navigation/map/rgarden_map.pgm
 mode: trinary
 resolution: 0.050
 origin: [-9.276, -6.879, 0]
