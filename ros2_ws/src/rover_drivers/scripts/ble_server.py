@@ -78,7 +78,7 @@ async def _run_ble_server(node):
         SERVICE_UUID: {
             COMMAND_CHAR_UUID: {
                 'Properties': GATTCharacteristicProperties.write,
-                'Permissions': GATTAttributePermissions.writable,
+                'Permissions': GATTAttributePermissions.writeable,
                 'Value': None,
             },
             STATUS_CHAR_UUID: {
