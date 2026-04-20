@@ -11,3 +11,4 @@ Adafruit-Blinka
 pyyaml
 rclpy
 paho-mqtt
+bless

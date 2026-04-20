@@ -18,7 +18,14 @@
     }
   },
 
-  "postCreateCommand": "apt-get update && apt-get install -y python3-pip git && cd ros2_ws && source /opt/ros/jazzy/setup.bash && colcon build --symlink-install",
+  "postCreateCommand": "apt-get update && apt-get install -y python3-pip git bluez python3-dbus libdbus-1-dev && pip3 install bless && cd ros2_ws && source /opt/ros/jazzy/setup.bash && colcon build --symlink-install",
 
-  "remoteUser": "root"
+  "remoteUser": "root",
+  
+  "runArgs": [
+    "--net=host",
+    "--cap-add=NET_ADMIN",
+    "--cap-add=NET_RAW",
+    "--volume=/var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket"
+  ]
 }
