@@ -70,16 +70,20 @@ class MotorBridge(Node):
         self.serial_port.write(command.encode())
 
     def read_serial(self):
-        if self.serial_port.in_waiting > 0:
-            line = self.serial_port.readline().decode().strip()
-
-            if line.startswith('ENC:'):
-                # Parse: ENC:left_ticks,right_ticks
-                data = line[4:].split(',')
-                left_ticks = int(data[0])
-                right_ticks = int(data[1])
-                self.update_odometry(left_ticks, right_ticks)
-
+    if self.serial_port.in_waiting > 0:
+        line = self.serial_port.readline().decode().strip()
+        # find ENC: anywhere in the line
+        if 'ENC:' in line:
+            enc_start = line.index('ENC:') + 4
+            data = line[enc_start:].split(',')
+            if len(data) == 2:
+                try:
+                    left_ticks = int(data[0])
+                    right_ticks = int(data[1])
+                    self.update_odometry(left_ticks, right_ticks)
+                except ValueError:
+                    pass
+                
     def update_odometry(self, left_ticks, right_ticks):
         # How many ticks since last update
         delta_left_ticks = left_ticks - self.last_left_ticks
