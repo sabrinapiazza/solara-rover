@@ -100,6 +100,12 @@ class MotorBridge(Node):
     
     def update_odometry(self, left_ticks, right_ticks):
         # How many ticks since last update
+    # Initialize on first reading
+        if self.last_left_ticks == 0 and self.last_right_ticks == 0:
+        self.last_left_ticks = left_ticks
+        self.last_right_ticks = right_ticks
+        return
+        
         delta_left_ticks = left_ticks - self.last_left_ticks
         delta_right_ticks = right_ticks - self.last_right_ticks
         self.last_left_ticks = left_ticks
