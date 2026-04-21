@@ -149,7 +149,7 @@ collision_monitor:
     PolygonStop:
       type: circle
       radius: 0.3
-      action_type: stop
+      action_type: none
       min_points: 4
       visualize: true
       polygon_pub_topic: polygon_stop
