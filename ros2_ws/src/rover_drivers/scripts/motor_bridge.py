@@ -107,7 +107,8 @@ class MotorBridge(Node):
 
         # Convert ticks to distance traveled (meters)
         delta_left = (delta_left_ticks / self.ticks_per_rev) * (2 * math.pi * self.wheel_radius)
-        delta_right = (delta_right_ticks / self.ticks_per_rev) * (2 * math.pi * self.wheel_radius)
+       #delta_right = (delta_right_ticks / self.ticks_per_rev) * (2 * math.pi * self.wheel_radius)
+       delta_right = delta_left
 
         # Dead reckoning
         delta_dist = (delta_left + delta_right) / 2.0
