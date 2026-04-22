@@ -8,18 +8,18 @@ def generate_launch_description():
     params_file = os.path.join(rover_navigation, 'config', 'slam_params.yaml')
 
     return LaunchDescription([
-        Node(
-            package='rplidar_ros',
-            executable='rplidar_composition',
-            name='rplidar_node',
-            output='screen',
-            parameters=[{
-                'frame_id': 'laser',
-                'angle_compensate': True,
-                'serial_port': '/dev/ttyUSB0',
-                'serial_baudrate': 115200,  # try 256000 if this doesn't work
-            }]
-        ),
+        # Node(
+        #     package='rplidar_ros',
+        #     executable='rplidar_composition',
+        #     name='rplidar_node',
+        #     output='screen',
+        #     parameters=[{
+        #         'frame_id': 'laser',
+        #         'angle_compensate': True,
+        #         'serial_port': '/dev/ttyUSB0',
+        #         'serial_baudrate': 115200,  # try 256000 if this doesn't work
+        #     }]
+        # ),
         Node(
             package='slam_toolbox',
             # executable='sync_slam_toolbox_node',
