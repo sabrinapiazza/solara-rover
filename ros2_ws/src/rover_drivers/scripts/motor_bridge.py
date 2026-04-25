@@ -47,17 +47,15 @@ class MotorBridge(Node):
         left_pwm  = int((left_speed  / self.max_linear) * self.max_speed)
         right_pwm = int((right_speed / self.max_linear) * self.max_speed)
 
-       left_pwm  = max(-255, min(255, left_pwm))
+        left_pwm  = max(-255, min(255, left_pwm))
         right_pwm = max(-255, min(255, right_pwm))
 
-        # Apply minimum PWM threshold to overcome stall
         MIN_PWM = 80
-        if 0 < left_pwm  < MIN_PWM: left_pwm  = MIN_PWM
-        if 0 < right_pwm < MIN_PWM: right_pwm = MIN_PWM
-        if -MIN_PWM < left_pwm  < 0: left_pwm  = -MIN_PWM
-        if -MIN_PWM < right_pwm < 0: right_pwm = -MIN_PWM
-        
-        
+        if 0 < left_pwm < MIN_PWM:    left_pwm  =  MIN_PWM
+        if 0 < right_pwm < MIN_PWM:   right_pwm =  MIN_PWM
+        if -MIN_PWM < left_pwm < 0:   left_pwm  = -MIN_PWM
+        if -MIN_PWM < right_pwm < 0:  right_pwm = -MIN_PWM
+
         command = f'CMD:{left_pwm},{right_pwm}\n'
         self.serial_port.write(command.encode())
 
