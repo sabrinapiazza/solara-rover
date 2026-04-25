@@ -34,3 +34,18 @@ def update_odometry(self, left_ticks, right_ticks):
     odom.pose.pose.orientation.w = math.cos(self.theta / 2)
 
     self.odom_pub.publish(odom)
+    
+    
+    self.odom_pub.publish(odom)
+
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = MotorBridge()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()
