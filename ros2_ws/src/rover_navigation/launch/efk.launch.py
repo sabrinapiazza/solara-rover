@@ -77,7 +77,7 @@ def generate_launch_description():
                 ('imu/data', '/imu/data'),
                 ('imu', 'imu/data'),
                 ('gps/fix', '/gps/fix'),
-                ('odometry/filtered', '/odometry/filtered'),
+                ('odometry/filtered', '/odom'),
             ]
         ),
         Node(
