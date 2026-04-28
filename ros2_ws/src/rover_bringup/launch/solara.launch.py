@@ -18,7 +18,7 @@ import os
 
 def generate_launch_description():
     lifecycle_configure = TimerAction(
-            period=5.0,  # wait 5 seconds for SLAM to fully start
+            period=15.0,  # wait 15 seconds for SLAM to fully start
             actions=[
                 ExecuteProcess(
                     cmd=['ros2', 'lifecycle', 'set', '/slam_toolbox', 'configure'],
@@ -28,7 +28,7 @@ def generate_launch_description():
         )
 
     lifecycle_activate = TimerAction(
-            period=7.0,  # wait 2 more seconds after configure
+            period=20.0,  # wait 2 more seconds after configure
             actions=[
                 ExecuteProcess(
                     cmd=['ros2', 'lifecycle', 'set', '/slam_toolbox', 'activate'],
