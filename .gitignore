@@ -34,3 +34,5 @@ rover_navigation/maps/*.pgm
 .venv/
 mqtt-publisher/
 pico_firmware/src/claw_controllerv3/lib/
+
+send_ip.sh
