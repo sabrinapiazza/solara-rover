@@ -9,8 +9,8 @@
 
 #define BASE 16
 #define JOINT_1 14
-#define JOINT_2 13
-#define GRIPPER 17
+#define GRIPPER 13
+#define JOINT_2 17
 #define debug false
 
 
@@ -29,10 +29,10 @@ void setServo(PWM *pin, float degree){
 } 
 
 void setBaseServo(PWM *pin, float degree){ 
-    if (degree < 0.0f || degree > 195.0f){
+    if (degree < 0.0f || degree > 270.0f){
         //printf("Please use value of 0-195\n\r");
     } else {
-        int value = (int)((((float)(pin->pulseMax-pin->pulseMin))*(degree/195.0))+pin->pulseMin);
+        int value = (int)((((float)(pin->pulseMax-pin->pulseMin))*(degree/270.0))+pin->pulseMin);
         int lastDegree = pin->lastDegree; //
         pin->lastDegree = degree; //
         pin->value = value; 
@@ -172,7 +172,7 @@ int main(){
     joint1.pulseMin = 1000;
     joint1.delay = 2000;
 
-    PWM joint2 = enableServo(JOINT_2);
+    PWM joint2 = enableServo(GRIPPER);
     joint2.pulseMax = 2000;
     joint2.pulseMin = 1000;
     joint2.delay = 2000;
@@ -183,7 +183,7 @@ int main(){
     base.pulseMin = 500;
     base.delay = 2000;
 
-    PWM gripper = enableServo(GRIPPER);
+    PWM gripper = enableServo(JOINT_2);
     gripper.pulseMax = 2500;
     gripper.pulseMin = 500;
     gripper.delay = 2000;
@@ -242,10 +242,11 @@ int main(){
         int c = getchar_timeout_us(100000);
         if (c != PICO_ERROR_TIMEOUT && c == 'S') {
             printf("GOT S\n");
-            setServo(&gripper, 0.0);
             printf("SET 0\n");
-            setServo(&gripper, 180.0);
-            printf("SET 180\n");
+            setBaseServo(&gripper, 0.0);
+            sleep_ms(2000);
+            printf("SET 2700\n");
+            setBaseServo(&gripper, 270.0);
             sleep_ms(2000);
             printf("DONE\n");
             break;
@@ -342,3 +343,5 @@ int main(){
 //         sleep_ms(1000);
 //     }
 // }
+
+

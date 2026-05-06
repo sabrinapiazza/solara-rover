@@ -75,7 +75,12 @@ target_link_libraries(claw_controllerv3
             pico_cyw43_arch_none
         
         )
-target_link_libraries(drill pico_stdlib hardware_pwm) #SABRINA ADDED
+
+
+target_link_libraries(drill 
+        pico_stdlib
+        hardware_pwm
+        ) #SABRINA ADDED
 
 pico_add_extra_outputs(claw_controllerv3)
 
