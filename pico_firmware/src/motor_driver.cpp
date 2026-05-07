@@ -2,10 +2,18 @@
 #include "hardware/pwm.h"
 #include "pico/stdlib.h"
 
-#define RPWM_L  2u
-#define LPWM_L  3u
-#define RPWM_R  6u
-#define LPWM_R  7u
+// Motor 1 (left front) & Motor 3 (left rear)
+#define RPWM_L1  2u
+#define LPWM_L1  3u
+#define RPWM_L2 10u
+#define LPWM_L2 11u
+
+// Motor 2 (right front) & Motor 4 (right rear)
+#define RPWM_R1  6u
+#define LPWM_R1  7u
+#define RPWM_R2 14u
+#define LPWM_R2 15u
+
 #define PWM_WRAP 255u
 
 static void setup_pwm_pin(uint pin) {
@@ -32,10 +40,14 @@ static void set_side(uint rpwm, uint lpwm, int pwm_val) {
 }
 
 void motor_init() {
-    setup_pwm_pin(RPWM_L);
-    setup_pwm_pin(LPWM_L);
-    setup_pwm_pin(RPWM_R);
-    setup_pwm_pin(LPWM_R);
+    setup_pwm_pin(RPWM_L1);
+    setup_pwm_pin(LPWM_L1);
+    setup_pwm_pin(RPWM_L2);
+    setup_pwm_pin(LPWM_L2);
+    setup_pwm_pin(RPWM_R1);
+    setup_pwm_pin(LPWM_R1);
+    setup_pwm_pin(RPWM_R2);
+    setup_pwm_pin(LPWM_R2);
 }
 
 void motor_set(int left_pwm, int right_pwm) {
@@ -44,6 +56,8 @@ void motor_set(int left_pwm, int right_pwm) {
     if (right_pwm >  255) right_pwm =  255;
     if (right_pwm < -255) right_pwm = -255;
 
-    set_side(RPWM_L, LPWM_L, left_pwm);
-    set_side(RPWM_R, LPWM_R, right_pwm);
+    set_side(RPWM_L1, LPWM_L1, left_pwm);
+    set_side(RPWM_L2, LPWM_L2, left_pwm);   // rear left mirrors front left
+    set_side(RPWM_R1, LPWM_R1, right_pwm);
+    set_side(RPWM_R2, LPWM_R2, right_pwm);  // rear right mirrors front right
 }

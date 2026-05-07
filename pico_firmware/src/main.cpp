@@ -48,7 +48,9 @@ int main() {
         uint32_t now = to_ms_since_boot(get_absolute_time());
         if (now - last_enc_send >= 50) {
             last_enc_send = now;
-            printf("ENC:%ld,%ld\n", get_left_ticks(), get_right_ticks());
+            printf("ENC:%ld,%ld,%ld,%ld\n",
+                get_left_ticks(), get_right_ticks(),
+                get_left2_ticks(), get_right2_ticks());
         }
     }
 }
