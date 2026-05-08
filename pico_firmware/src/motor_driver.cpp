@@ -42,15 +42,34 @@ static void set_side(uint rpwm, uint lpwm, int pwm_val) {
 static int current_left  = 0;
 static int current_right = 0;
 
+// void motor_init() {
+//     setup_pwm_pin(RPWM_L1);
+//     setup_pwm_pin(LPWM_L1);
+//     setup_pwm_pin(RPWM_L2);
+//     setup_pwm_pin(LPWM_L2);
+//     setup_pwm_pin(RPWM_R1);
+//     setup_pwm_pin(LPWM_R1);
+//     setup_pwm_pin(RPWM_R2);
+//     setup_pwm_pin(LPWM_R2);
+// }
+
 void motor_init() {
-    setup_pwm_pin(RPWM_L1);
-    setup_pwm_pin(LPWM_L1);
-    setup_pwm_pin(RPWM_L2);
-    setup_pwm_pin(LPWM_L2);
-    setup_pwm_pin(RPWM_R1);
-    setup_pwm_pin(LPWM_R1);
-    setup_pwm_pin(RPWM_R2);
-    setup_pwm_pin(LPWM_R2);
+    // Initialize slices once, then set up individual pins
+    setup_pwm_pin(RPWM_L1);  // slice 1
+    setup_pwm_pin(RPWM_L2);  // slice 5
+    setup_pwm_pin(RPWM_R1);  // slice 3
+    setup_pwm_pin(RPWM_R2);  // slice 7
+
+    // Now just set GPIO function for LPWM pins (same slices already initialized)
+    gpio_set_function(LPWM_L1, GPIO_FUNC_PWM);
+    gpio_set_function(LPWM_L2, GPIO_FUNC_PWM);
+    gpio_set_function(LPWM_R1, GPIO_FUNC_PWM);
+    gpio_set_function(LPWM_R2, GPIO_FUNC_PWM);
+
+    pwm_set_gpio_level(LPWM_L1, 0);
+    pwm_set_gpio_level(LPWM_L2, 0);
+    pwm_set_gpio_level(LPWM_R1, 0);
+    pwm_set_gpio_level(LPWM_R2, 0);
 }
 
 void motor_set(int left_pwm, int right_pwm) {

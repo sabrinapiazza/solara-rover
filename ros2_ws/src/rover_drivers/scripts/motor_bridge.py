@@ -10,10 +10,18 @@ class MotorBridge(Node):
     def __init__(self):
         super().__init__('motor_bridge')
 
+        # self.serial_port = serial.Serial(
+        #     port='/dev/ttyACM0',
+        #     baudrate=115200,
+        #     timeout=1.0
+        # )
+        
         self.serial_port = serial.Serial(
             port='/dev/ttyACM0',
             baudrate=115200,
-            timeout=1.0
+            timeout=1.0,
+            dsrdtr=False,
+            rtscts=False
         )
 
         self.wheel_base = 0.3
@@ -65,7 +73,8 @@ class MotorBridge(Node):
             if 'ENC:' in line:
                 enc_start = line.index('ENC:') + 4
                 data = line[enc_start:].split(',')
-                if len(data) == 2:
+                # if len(data) == 2:
+                if len(data) >= 2:
                     try:
                         left_ticks  = int(data[0])
                         right_ticks = int(data[1])
