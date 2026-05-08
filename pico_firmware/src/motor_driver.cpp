@@ -19,12 +19,13 @@
 static void setup_pwm_pin(uint pin) {
     gpio_set_function(pin, GPIO_FUNC_PWM);
     uint slice = pwm_gpio_to_slice_num(pin);
-    pwm_config cfg = pwm_get_default_config();
-    pwm_config_set_clkdiv(&cfg, 245.1f);
-    pwm_config_set_wrap(&cfg, PWM_WRAP);
-    pwm_init(slice, &cfg, true);
-    pwm_set_gpio_level(pin, 0);
+    uint channel = pwm_gpio_to_channel(pin);
+    pwm_set_clkdiv(slice, 245.1f);
+    pwm_set_wrap(slice, PWM_WRAP);
+    pwm_set_chan_level(slice, channel, 0);
+    pwm_set_enabled(slice, true);
 }
+
 
 static void set_side(uint rpwm, uint lpwm, int pwm_val) {
     if (pwm_val > 0) {
