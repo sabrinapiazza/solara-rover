@@ -91,8 +91,8 @@ void motor_set(int left_pwm, int right_pwm) {
     // set_side(RPWM_R1, LPWM_R1, current_right);
     // // set_side(RPWM_R2, LPWM_R2, current_right);  // rear right disabled
 
-    //set_side(RPWM_L1, LPWM_L1, current_left);      // motor 1 - active
-    // set_side(RPWM_L2, LPWM_L2, current_left);   // motor 3 - disabled
-    //set_side(RPWM_R1, LPWM_R1, current_right);  // motor 2 - disabled
-     set_side(RPWM_R2, LPWM_R2, current_right);  // motor 4 - disabled
+    set_side(RPWM_L1, LPWM_L1, current_left);      // motor 1 - active
+     set_side(RPWM_L2, LPWM_L2, current_left);   // motor 3 - disabled
+    set_side(RPWM_R1, LPWM_R1, current_right);  // motor 2 - disabled
+   //  set_side(RPWM_R2, LPWM_R2, current_right);  // motor 4 - disabled
 }
