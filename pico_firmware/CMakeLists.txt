@@ -28,3 +28,7 @@ target_link_libraries(solara_firmware
 
 target_include_directories(solara_firmware PRIVATE src)
 pico_add_extra_outputs(solara_firmware)
+
+target_compile_definitions(solara_firmware PRIVATE
+    PICO_STDIO_USB_CONNECTION_WITHOUT_DTR=1
+)
