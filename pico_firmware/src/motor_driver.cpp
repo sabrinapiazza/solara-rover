@@ -59,7 +59,6 @@ void motor_set(int left_pwm, int right_pwm) {
     if (right_pwm >  255) right_pwm =  255;
     if (right_pwm < -255) right_pwm = -255;
 
-    // Ramp by max 5 per call
     if (left_pwm > current_left + 5)        current_left += 5;
     else if (left_pwm < current_left - 5)   current_left -= 5;
     else                                     current_left = left_pwm;
@@ -69,7 +68,7 @@ void motor_set(int left_pwm, int right_pwm) {
     else                                     current_right = right_pwm;
 
     set_side(RPWM_L1, LPWM_L1, current_left);
-    set_side(RPWM_L2, LPWM_L2, current_left);
+    // set_side(RPWM_L2, LPWM_L2, current_left);   // rear left disabled
     set_side(RPWM_R1, LPWM_R1, current_right);
-    set_side(RPWM_R2, LPWM_R2, current_right);
+    // set_side(RPWM_R2, LPWM_R2, current_right);  // rear right disabled
 }
