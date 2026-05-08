@@ -67,6 +67,9 @@ class MotorBridge(Node):
         command = f'CMD:{left_pwm},{right_pwm}\n'
         self.serial_port.write(command.encode())
         self.get_logger().info(f'Got cmd_vel: linear={msg.linear.x}')
+        command = f'CMD:{left_pwm},{right_pwm}\n'
+        self.get_logger().info(f'Sending: {command.strip()}')
+        self.serial_port.write(command.encode())
 
     def read_serial(self):
         if self.serial_port.in_waiting > 0:
