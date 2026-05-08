@@ -56,7 +56,7 @@
 // }
 
 #include "pico/stdlib.h"
-#include "pico/cyw43_arch.h"
+// #include "pico/cyw43_arch.h"
 #include "motor_driver.h"
 #include "encoder.h"
 #include <cstdio>
@@ -66,7 +66,7 @@
 #define SERIAL_TIMEOUT_MS 100
 
 int main() {
-    cyw43_arch_init();
+    // cyw43_arch_init();
     stdio_init_all();
     sleep_ms(2000);
 
