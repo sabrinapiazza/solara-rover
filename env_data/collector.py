@@ -81,7 +81,7 @@ class CollectorNode(Node):
             topics["ML"],
             json.dumps({
                 "timestamp":   timestamp,
-                "environment": env_data,
+               # "environment": env_data,
                 "light":       light_data,
             }),
             qos=QoS
