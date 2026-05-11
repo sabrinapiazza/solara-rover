@@ -22,8 +22,8 @@ INTERVAL = config["collector"]["poll_interval"]
 QoS = 1
 
 # MQTT CALLBACKS
-def on_connect(client, userdata, flags, rc):
-    print(f"[MQTT] CONNACK rc={rc}")
+def on_connect(client, userdata, flags, reason_code, properties):
+    print(f"[MQTT] CONNACK rc={reason_code}")
 
 def on_publish(client, userdata, mid):
     print(f"[MQTT] PUBACK received for PacketId={mid}")
@@ -103,7 +103,11 @@ class CollectorNode(Node):
 
 # MAIN
 def main():
-    client = mqtt.Client(client_id=broker["client_id"], clean_session=broker["clean_session"])
+    client = mqtt.Client(
+        callback_api_version=mqtt.CallbackAPIVersion.VERSION2,
+        client_id=broker["client_id"],
+        clean_session=broker["clean_session"]
+    )
     client.on_connect    = on_connect
     client.on_publish    = on_publish
     client.on_disconnect = on_disconnect
