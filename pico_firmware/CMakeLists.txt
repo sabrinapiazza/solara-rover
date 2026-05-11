@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.13)
 
 set(PICO_SDK_PATH $ENV{HOME}/pico-sdk)
-# set(PICO_BOARD pico_w)
-set(PICO_BOARD pico)
+set(PICO_BOARD pico_w)
+#set(PICO_BOARD pico)
 include(${PICO_SDK_PATH}/pico_sdk_init.cmake)
 
 project(solara_firmware C CXX ASM)
@@ -22,7 +22,7 @@ pico_enable_stdio_uart(solara_firmware 0)
 
 target_link_libraries(solara_firmware
     pico_stdlib
-    # pico_cyw43_arch_none
+    pico_cyw43_arch_none
     hardware_pwm
     hardware_gpio
 )
