@@ -4,7 +4,7 @@
 # DONE - Topic names for publishing
 
 broker:
-  host: localhost    #has to change to server's IP address. when testing, put wifi IP address of laptop or whatever.
+  host: 172.18.224.1    #has to change to server's IP address. when testing, put wifi IP address of laptop or whatever.
   ip: "0.0.0.0"
   port: 1883
   client_id: "collector-pi-001"
