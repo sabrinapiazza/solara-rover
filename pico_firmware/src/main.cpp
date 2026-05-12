@@ -70,7 +70,7 @@ int main() {
     stdio_init_all();
     sleep_ms(2000);
 
-    //motor_init();
+    motor_init();
     //motor_test_all_4_slow();
     encoder_init();
 
