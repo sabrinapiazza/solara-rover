@@ -84,8 +84,6 @@ int main() {
             if (c == '\n') {
                 buf[buf_idx] = '\0';
                 buf_idx = 0;
-
-                }
                 if (strncmp(buf, "CMD:", 4) == 0) {
                     char *data = buf + 4;
                     char *comma = strchr(data, ',');
