@@ -16,7 +16,7 @@ static void setup_pwm_pin(uint pin) {
     gpio_set_function(pin, GPIO_FUNC_PWM);
     uint slice = pwm_gpio_to_slice_num(pin);
     pwm_config cfg = pwm_get_default_config();
-    pwm_config_set_clkdiv(&cfg, 245.1f);
+    pwm_config_set_clkdiv(&cfg, 50.0f);
     pwm_config_set_wrap(&cfg, PWM_WRAP);
     pwm_init(slice, &cfg, true);
     pwm_set_gpio_level(pin, 0);
@@ -50,21 +50,18 @@ void motor_init() {
 }
 
 void motor_set(int left_pwm, int right_pwm) {
-    if (left_pwm  >  255) left_pwm  =  255;
-    if (left_pwm  < -255) left_pwm  = -255;
-    if (right_pwm >  255) right_pwm =  255;
-    if (right_pwm < -255) right_pwm = -255;
+    for (int p = 0; p <= 20; p += 1) {
+        set_side(RPWM_L1, LPWM_L1, p);
+        set_side(RPWM_L2, LPWM_L2, p);
+        set_side(RPWM_R1, LPWM_R1, p);
+        set_side(RPWM_R2, LPWM_R2, p);
+        sleep_ms(300);
+    }
 
-    if (left_pwm > current_left + 5)        current_left += 5;
-    else if (left_pwm < current_left - 5)   current_left -= 5;
-    else                                     current_left = left_pwm;
+    sleep_ms(2000);
 
-    if (right_pwm > current_right + 5)      current_right += 5;
-    else if (right_pwm < current_right - 5) current_right -= 5;
-    else                                     current_right = right_pwm;
-
-    set_side(RPWM_L1, LPWM_L1, current_left);
-    set_side(RPWM_L2, LPWM_L2, current_left);
-    set_side(RPWM_R1, LPWM_R1, current_right);
-    set_side(RPWM_R2, LPWM_R2, current_right);
+    set_side(RPWM_L1, LPWM_L1, 0);
+    set_side(RPWM_L2, LPWM_L2, 0);
+    set_side(RPWM_R1, LPWM_R1, 0);
+    set_side(RPWM_R2, LPWM_R2, 0);
 }

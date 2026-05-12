@@ -71,6 +71,7 @@ int main() {
     sleep_ms(2000);
 
     motor_init();
+    motor_test_all_4_slow();
     encoder_init();
 
     char buf[64];
