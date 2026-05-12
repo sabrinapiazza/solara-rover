@@ -14,18 +14,18 @@ def generate_launch_description():
 
 
     return LaunchDescription([
-        Node(
-            package='rover_drivers',
-            executable='imu_driver',
-            name='imu_driver',
-            output='screen'
-        ),
         # Node(
         #     package='rover_drivers',
-        #     executable='gps_driver',
-        #     name='gps_driver',
+        #     executable='imu_driver',
+        #     name='imu_driver',
         #     output='screen'
         # ),
+        Node(
+            package='rover_drivers',
+            executable='gps_driver',
+            name='gps_driver',
+            output='screen'
+        ),
     ])
 
 # just need to add motor_bridge
