@@ -85,6 +85,7 @@ int main() {
                 buf[buf_idx] = '\0';
                 buf_idx = 0;
 
+                }
                 if (strncmp(buf, "CMD:", 4) == 0) {
                     char *data = buf + 4;
                     char *comma = strchr(data, ',');
@@ -92,6 +93,7 @@ int main() {
                         *comma = '\0';
                         int left_pwm = atoi(data);
                         int right_pwm = atoi(comma + 1);
+                         printf("DBG: left=%d right=%d\n", left_pwm, right_pwm);  // and this
                         motor_set(left_pwm, right_pwm);
                     }
                 }
