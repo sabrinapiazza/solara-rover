@@ -12,14 +12,16 @@
 #define LPWM_R2 15u
 #define PWM_WRAP 255u
 
-static void setup_pwm_pin(uint pin) {
-    gpio_set_function(pin, GPIO_FUNC_PWM);
-    uint slice = pwm_gpio_to_slice_num(pin);
+static void setup_pwm_pair(uint pin_a, uint pin_b) {
+    gpio_set_function(pin_a, GPIO_FUNC_PWM);
+    gpio_set_function(pin_b, GPIO_FUNC_PWM);
+    uint slice = pwm_gpio_to_slice_num(pin_a);
     pwm_config cfg = pwm_get_default_config();
     pwm_config_set_clkdiv(&cfg, 245.1f);
     pwm_config_set_wrap(&cfg, PWM_WRAP);
     pwm_init(slice, &cfg, true);
-    pwm_set_gpio_level(pin, 0);
+    pwm_set_gpio_level(pin_a, 0);
+    pwm_set_gpio_level(pin_b, 0);
 }
 
 static void set_side(uint rpwm, uint lpwm, int pwm_val) {
@@ -39,14 +41,10 @@ static int current_left  = 0;
 static int current_right = 0;
 
 void motor_init() {
-    setup_pwm_pin(RPWM_L1);
-    setup_pwm_pin(LPWM_L1);
-    setup_pwm_pin(RPWM_L2);
-    setup_pwm_pin(LPWM_L2);
-    setup_pwm_pin(RPWM_R1);
-    setup_pwm_pin(LPWM_R1);
-    setup_pwm_pin(RPWM_R2);
-    setup_pwm_pin(LPWM_R2);
+    setup_pwm_pair(RPWM_L1, LPWM_L1);
+    setup_pwm_pair(RPWM_L2, LPWM_L2);
+    setup_pwm_pair(RPWM_R1, LPWM_R1);
+    setup_pwm_pair(RPWM_R2, LPWM_R2);
 }
 
 void motor_set(int left_pwm, int right_pwm) {
