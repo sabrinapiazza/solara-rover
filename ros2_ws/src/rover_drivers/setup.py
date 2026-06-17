@@ -27,6 +27,8 @@ setup(
             'gps_driver = rover_drivers.gps_driver:main',
             'imu_driver = rover_drivers.imu_driver:main',
             'motor_bridge = rover_drivers.motor_bridge:main',
+            'lidar_obstacle_node = rover_drivers.lidar_obstacle_node:main',
+            'fake_scan_pub = rover_drivers.fake_scan_pub:main',
         ],
     },
 )
