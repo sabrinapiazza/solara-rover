@@ -1,0 +1,14 @@
+# PlatformIO
+.pio/
+.vscode/.pio/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Sensor logs
+data/
+
+# OS
+.DS_Store
